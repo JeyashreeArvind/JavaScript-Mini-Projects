@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects- Day3</title>
+    <style>
+        .container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .game-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+input { padding: 10px; width: 200px; margin-bottom: 10px; }
+button { padding: 10px 20px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
+button:hover { background-color: #0056b3; }
+#message { font-weight: bold; margin-top: 15px; }
+.card { border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 2px 2px 12px #eee; }
+#result { margin-top: 20px; font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+<h1>Mini Project 1 :  Simple Login System </h1> 
+<h2>Simple Login System</h2>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Enter username"><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" placeholder="Enter password"><br><br>
+
+    <button onclick="loginUser()">Login</button>
+
+    <!-- Area to display results on the page -->
+    <p id="resultMessage"></p>
+    <script>
+        function loginUser() {
+    // Stored/hardcoded username and password for this example
+    const storedUsername = "user";
+    const storedPassword = "password";
+
+    // Get input values from the HTML document
+    const usernameInput = document.getElementById("username").value;
+    const passwordInput = document.getElementById("password").value;
+    const resultElement = document.getElementById("resultMessage");
+
+    // Check if the username and password match the stored values
+    if (usernameInput === storedUsername && passwordInput === storedPassword) {
+        // Condition 2: Login successful
+        resultElement.textContent = "Login successful!";
+        resultElement.style.color = "green";
+        console.log("Login successful!"); // Log to console
+    } else {
+        // Condition 3: Invalid credentials
+        resultElement.textContent = "Invalid credentials!";
+        resultElement.style.color = "red";
+        console.log("Invalid credentials!"); // Log to console
+    }
+}
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 2: Traffic Light System </h1>
+    <div class="container">
+        <h2>Traffic Light Rule Checker</h2>
+        <label for="colorInput">Enter a traffic light color (red, yellow, or green):</label><br>
+        <input type="text" id="colorInput" placeholder="e.g., green">
+        <button onclick="checkColor()">Check Rule</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkColor() {
+            // Get the value from the input field and convert to lowercase
+            const color = document.getElementById('colorInput').value.toLowerCase();
+            const resultElement = document.getElementById('result');
+
+            // Use a switch statement or if/else if for the conditions
+            switch (color) {
+                case 'red':
+                    resultElement.textContent = 'Stop!';
+                    resultElement.style.color = 'red';
+                    break;
+                case 'yellow':
+                    resultElement.textContent = 'Slow down!';
+                    resultElement.style.color = 'orange';
+                    break;
+                case 'green':
+                    resultElement.textContent = 'Go!';
+                    resultElement.style.color = 'green';
+                    break;
+                default:
+                    resultElement.textContent = 'Invalid color!';
+                    resultElement.style.color = 'black'; // Or any default color
+                    break;
+            }
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 3 : Number Guessing Game </h1>
+    <div class="game-container">
+        <h1>Number Guessing Game</h1>
+        <p>I'm thinking of a number between 1 and 100.</p>
+        
+        <input type="number" id="guessInput" placeholder="Enter your guess">
+        <button id="guessBtn">Guess</button>
+        
+        <p id="message"></p>
+        <p>Attempts: <span id="attempts">0</span></p>
+        
+        <button id="resetBtn" style="display:none;">Play Again</button>
+    </div>
+    <script>
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+let attempts = 0;
+
+const guessInput = document.getElementById('guessInput');
+const guessBtn = document.getElementById('guessBtn');
+const message = document.getElementById('message');
+const attemptsDisplay = document.getElementById('attempts');
+const resetBtn = document.getElementById('resetBtn');
+
+guessBtn.addEventListener('click', () => {
+    const userGuess = Number(guessInput.value);
+    attempts++;
+    attemptsDisplay.textContent = attempts;
+
+    if (!userGuess || userGuess < 1 || userGuess > 100) {
+        message.textContent = "Please enter a valid number between 1 and 100.";
+        message.style.color = "orange";
+    } else if (userGuess === randomNumber) {
+        message.textContent = `Correct! The number was ${randomNumber}.`;
+        message.style.color = "green";
+        endGame();
+        } else if (userGuess > randomNumber) {
+        message.textContent = "Too high! Try again.";
+        message.style.color = "red";
+    } else {
+        message.textContent = "Too low! Try again.";
+        message.style.color = "red";
+    }
+    guessInput.value = '';
+});
+
+function endGame() {
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
+    resetBtn.style.display = "inline-block";
+}
+resetBtn.addEventListener('click', () => {
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+    attempts = 0;
+    attemptsDisplay.textContent = attempts;
+    message.textContent = '';
+    guessInput.disabled = false;
+    guessBtn.disabled = false;
+    resetBtn.style.display = "none";
+});
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 4 : Age Eligibility Checker</h1>
+    <div class="container">
+        <h2>Age Eligibility Checker</h2>
+        <label for="ageInput">Enter your age:</label>
+        <input type="number" id="ageInput" placeholder="Enter age">
+        <button onclick="checkEligibility()">Check Eligibility</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function checkEligibility() {
+            // Get the value entered by the user
+            const ageInput = document.getElementById('ageInput');
+            const age = parseInt(ageInput.value, 10);
+            const outputDiv = document.getElementById('output');
+            let messages = '';
+
+            // Validate the input
+            if (isNaN(age) || age < 0) {
+                outputDiv.textContent = 'Please enter a valid age.';
+                return;
+            }
+
+            // Check conditions and build the output message
+            if (age < 18) {
+                messages = "You are not eligible for these activities.";
+            } else {
+                messages = "You are eligible for the following activities:\n";
+                if (age >= 18) {
+                    messages += "- Eligible to vote\n";
+                }
+                if (age >= 21) {
+                    messages += "- Can drink alcohol\n";
+                }
+                if (age >= 25) {
+                    messages += "- Can rent a car\n";
+                }
+            }
+
+            // Display the results
+            outputDiv.textContent = messages;
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 5: Grading System with Remarks</h1>
+    <div class="card">
+    <h2>Student Grading System</h2>
+    <label for="marks">Enter Marks (0-100):</label>
+    <input type="number" id="marks" min="0" max="100">
+    <button onclick="calculateGrade()">Check Grade</button>
+
+    <div id="result1"></div>
+</div>
+
+<script>
+    function calculateGrade() {
+        const marks = parseFloat(document.getElementById('marks').value);
+        const resultDiv = document.getElementById('result1');
+        
+        let grade = "";
+        let remark = "";
+
+        // Validation for empty or out-of-range input
+        if (isNaN(marks) || marks < 0 || marks > 100) {
+            resultDiv.innerHTML = "Please enter a valid number between 0 and 100.";
+            resultDiv.style.color = "red";
+            return;
+        }
+        if (marks >= 90) {
+            grade = "A+";
+            remark = "Excellent";
+        } else if (marks >= 80) {
+            grade = "A";
+            remark = "Good";
+        } else if (marks >= 70) {
+            grade = "B";
+            remark = "Average";
+        } else if (marks >= 60) {
+            grade = "C";
+            remark = "Poor";
+        } else {
+            grade = "F";
+            remark = "Fail";
+        }
+
+        // Output formatting
+        resultDiv.style.color = "black";
+        resultDiv.innerHTML = `Grade: ${grade} <br> Remark: ${remark}`;
+    }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 6: Rock-Paper-Scissors Game (1 Player vs Computer)</h1>
+    <div class="game-container">
+        <h1>Rock Paper Scissors</h1>
+        <p>Choose your move:</p>
+        
+        <button onclick="playGame('rock')">Rock</button>
+        <button onclick="playGame('paper')">Paper</button>
+        <button onclick="playGame('scissors')">Scissors</button>
+
+        <div id="results">
+            <!-- Results will be displayed here -->
+        </div>
+
+        <div id="score-board">
+            Score: Player <span id="player-score">0</span> - Computer <span id="computer-score">0</span>
+        </div>
+    </div>
+    <script>
+        // Global variables for tracking scores
+let playerScore = 0;
+let computerScore = 0;
+
+// Function to generate a random computer choice
+function getComputerChoice() {
+    const choices = ['rock', 'paper', 'scissors'];
+    const randomIndex = Math.floor(Math.random() * 3);
+    return choices[randomIndex];
+}
+
+// Main function to play the game round
+function playGame(playerChoice) {
+    const computerChoice = getComputerChoice();
+    const result = determineWinner(playerChoice, computerChoice);
+    displayResult(playerChoice, computerChoice, result);
+    updateScore(result);
+}
+
+// Function to determine the winner of a single round
+function determineWinner(player, computer) {
+    if (player === computer) {
+        return 'tie';
+    }
+    
+    // Winning conditions for the player
+    if (
+        (player === 'rock' && computer === 'scissors') ||
+        (player === 'scissors' && computer === 'paper') ||
+        (player === 'paper' && computer === 'rock')
+    ) {
+        return 'win';
+    } else {
+        return 'lose';
+    }
+}
+
+// Function to display the result message to the user
+function displayResult(playerChoice, computerChoice, result) {
+    const resultsDiv = document.getElementById('results');
+    let message = `You chose ${playerChoice}, computer chose ${computerChoice}. `;
+
+    if (result === 'win') {
+        message += '🎉 You Win! 🎉';
+    } else if (result === 'lose') {
+        message += '😢 You Lose! 😢';
+    } else {
+        message += "🤝 It's a Tie! 🤝";
+    }
+
+    resultsDiv.innerHTML = message;
+}
+
+// Function to update the score board
+function updateScore(result) {
+    if (result === 'win') {
+        playerScore++;
+    } else if (result === 'lose') {
+        computerScore++;
+    }
+
+    document.getElementById('player-score').textContent = playerScore;
+    document.getElementById('computer-score').textContent = computerScore;
+}
+
+    </script>
+</body>
+</html>

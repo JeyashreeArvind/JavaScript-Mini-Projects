@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Mini-Projects - Day1</title>
+<style>
+  .order-card1 { background: rgb(136, 228, 235); padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 400px; } 
+.order-card { background: rgba(231, 160, 160, 0.806); padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 400px; }
+.status-false { color: #d9534f; font-weight: bold; }
+.status-true { color: #5cb85c; font-weight: bold; }
+.controls { margin-top: 20px; border-top: 1px solid #eee; pt: 10px; }
+button { cursor: pointer; margin-top: 5px; padding: 8px; }
+body { font-family: sans-serif; margin: 20px auto; padding: 0 20px; }
+        .quiz-container { margin-bottom: 20px; }
+        .question { font-weight: bold; margin-bottom: 10px; }
+        .options label { display: block; margin-bottom: 5px; cursor: pointer; }
+        .results-container { margin-top: 30px; border-top: 2px solid #ccc; padding-top: 20px; display: none; }
+        .result-item { margin-bottom: 15px; padding: 10px; border: 1px solid #eee; }
+        .correct { color: green; }
+        .incorrect { color: red; }
+        .user-answer { font-style: italic; }
+
+</style>
+</head>
+<body>
+ <h1>Mini project 1. Online Food Ordering System</h1> 
+ <div class="order-card">
+        <h2>Order Summary</h2>
+        <div id="display-area">
+            <!-- Order details will be injected here by JavaScript -->
+        </div>
+        
+        <div class="controls">
+            <input type="text" id="newItem" placeholder="Enter food item">
+            <button onclick="addItem()">Add Item</button>
+            <button onclick="markAsDelivered()">Mark as Delivered</button>
+        </div>
+    </div>
+    <script>
+        let order = {
+    restaurantName: "The Indian Kitchen", // String
+    orderNumber: 55902,                    // Number
+    foodItems: ["Veg Burger", "Fries"],     // Array
+    totalPrice: 15.50,                     // Number
+    isDelivered: false                     // Boolean
+};
+
+// 2. Display Order Summary
+function displayOrder() {
+    const displayArea = document.getElementById('display-area');
+    displayArea.innerHTML = `
+        <p><strong>Restaurant:</strong> ${order.restaurantName}</p>
+        <p><strong>Order ID:</strong> #${order.orderNumber}</p>
+        <p><strong>Items:</strong> ${order.foodItems.join(', ')}</p>
+        <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
+        <p><strong>Status:</strong> 
+            <span class="${order.isDelivered ? 'status-true' : 'status-false'}">
+                ${order.isDelivered ? "Delivered" : "In Progress"}
+            </span>
+             </p>
+    `;
+}
+
+// 3. Update Order Status
+function markAsDelivered() {
+    order.isDelivered = true;
+    displayOrder();
+}
+
+// 4. Support Multiple Items (Adding/Removing)
+function addItem() {
+    const itemInput = document.getElementById('newItem');
+    if (itemInput.value !== "") {
+        order.foodItems.push(itemInput.value); // Add to Array
+        order.totalPrice += 5.00;              // Simulate price increase
+        itemInput.value = "";                  // Clear input
+        displayOrder();
+    }
+}
+displayOrder();
+    </script>  
+    <br><hr><br>
+<h1>Mini Project 2 : Online Quiz System</h1>
+<h1>General Knowledge Quiz</h1>
+
+    <div id="quiz-container">
+        <!-- Quiz questions will be dynamically loaded here by JavaScript -->
+    </div>
+
+    <button onclick="submitQuiz()">Submit Quiz</button>
+
+    <div id="results-container">
+        <h2>Quiz Results</h2>
+        <div id="results-list">
+            <!-- Quiz results will be dynamically loaded here by JavaScript -->
+        </div>
+        <p>Total Score: <span id="score">0</span> / <span id="total-questions">0</span></p>
+    </div>
+    <script>
+        const questions = [
+    {
+        question: "What is the capital of France?",
+        options: ["Berlin", "Madrid", "Paris", "Rome"],
+        correctAnswer: "Paris",
+        userAnswer: "" // Property to store the user's selected answer
+    },
+    {
+        question: "Which planet is known as the Red Planet?",
+        options: ["Earth", "Mars", "Jupiter", "Venus"],
+        correctAnswer: "Mars",
+        userAnswer: ""
+    },
+    {
+        question: "What is the largest ocean on Earth?",
+        options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+        correctAnswer: "Pacific Ocean",
+        userAnswer: ""
+    }
+];
+function generateQuiz() {
+    const quizContainer = document.getElementById('quiz-container');
+    questions.forEach((q, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.classList.add('quiz-container');
+        questionDiv.innerHTML = `<div class="question">${index + 1}. ${q.question}</div>`;
+
+        const optionsDiv = document.createElement('div');
+        optionsDiv.classList.add('options');
+
+        q.options.forEach(option => {
+            optionsDiv.innerHTML += `
+                <label>
+                    <input type="radio" name="question${index}" value="${option}">
+                    ${option}
+                </label>
+            `;
+        });
+
+        questionDiv.appendChild(optionsDiv);
+        quizContainer.appendChild(questionDiv);
+    });
+}
+function isAnswerCorrect(questionObj) {
+    return questionObj.userAnswer === questionObj.correctAnswer;
+}
+
+// 4. Extend for Multiple Questions: Function to handle quiz submission and scoring
+function submitQuiz() {
+    let score = 0;
+    const resultsList = document.getElementById('results-list');
+    resultsList.innerHTML = ''; // Clear previous results
+
+    // Get all radio button groups
+    const formElements = document.forms[0] ? document.forms[0].elements : null; // Simplified access to form elements if wrapped in a form tag
+
+    questions.forEach((q, index) => {
+        // Find the selected answer for the current question
+        const selector = `input[name="question${index}"]:checked`;
+        const userAnswerElement = document.querySelector(selector);
+        
+        if (userAnswerElement) {
+            q.userAnswer = userAnswerElement.value;
+        } else {
+            q.userAnswer = "No answer provided";
+        }
+    const correctness = isAnswerCorrect(q);
+        if (correctness) {
+            score++;
+        }
+
+        const resultItem = document.createElement('div');
+        resultItem.classList.add('result-item', correctness ? 'correct' : 'incorrect');
+        resultItem.innerHTML = `
+            <p><strong>Question ${index + 1}:</strong> ${q.question}</p>
+            <p class="user-answer">Your Answer: ${q.userAnswer}</p>
+            <p>Correct Answer: ${q.correctAnswer}</p>
+            <p>Status: ${correctness ? 'Correct ✅' : 'Incorrect ❌'}</p>
+        `;
+        resultsList.appendChild(resultItem);
+    });
+
+    // Display total score and show results container
+    document.getElementById('score').textContent = score;
+    document.getElementById('total-questions').textContent = questions.length;
+    document.getElementById('results-container').style.display = 'block';
+
+    // Disable the submit button after submission
+    document.querySelector('button').disabled = true;
+}
+
+// Initialize the quiz when the script loads
+generateQuiz();
+    </script>
+<br><hr><br>
+<h1>Mini Project 3: E-Commerce Shopping Cart</h1>
+<h1>Product Store</h1>
+    <!-- Product Grid -->
+    <div id="product-list">
+        <div class="product" data-id="1" data-name="Adidas Shoes" data-price="2500">
+            <h3>Adidas Shoes</h3>
+            <p>Price: $2500</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="product" data-id="2" data-name="Umbrella" data-price="500">
+            <h3>Umbrella</h3>
+            <p>Price: $500</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="product" data-id="3" data-name="Bata School Shoes" data-price="500">
+            <h3>Bata School Shoes</h3>
+            <p>Price: $500</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+        <div class="product" data-id="4" data-name="Rain Coat" data-price="1500">
+            <h3>Rain Coat</h3>
+            <p>Price: $1500</p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+    <div id="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items"></ul>
+        <p>Total: $<span id="total-price">0</span></p>
+        <button id="clear-cart">Clear Cart</button>
+    </div>
+    <script>
+        let cart = [];
+
+document.querySelectorAll('.add-to-cart').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const productEl = e.target.parentElement;
+        const id = productEl.dataset.id;
+        const name = productEl.dataset.name;
+        const price = parseFloat(productEl.dataset.price);
+
+        addToCart(id, name, price);
+    });
+});
+
+function addToCart(id, name, price) {
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({ id, name, price, quantity: 1 });
+    }
+    updateUI();
+}
+
+function updateUI() {
+    const cartList = document.getElementById('cart-items');
+    const totalEl = document.getElementById('total-price');
+    cartList.innerHTML = '';
+    let total = 0;
+
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} x ${item.quantity} - $${item.price * item.quantity}`;
+        cartList.appendChild(li);
+        total += item.price * item.quantity;
+    });
+
+    totalEl.textContent = total;
+}
+
+document.getElementById('clear-cart').addEventListener('click', () => {
+    cart = [];
+    updateUI();
+});
+
+    </script>
+    <br><hr><br>
+<h1>Mini project 4: Online Food Ordering System </h1>
+<div class="order-card1" id="order-display">
+        <!-- Order details will be injected here -->
+    </div>
+
+    <div class="controls">
+        <input type="text" id="item-input" placeholder="Enter food item">
+        <button onclick="addItem()">Add Item</button>
+        <button onclick="toggleDelivery()">Toggle Delivery Status</button>
+    </div>
+<script>
+    class FoodOrder {
+    constructor(restaurantName, orderNumber) {
+        // Requirement 1: Store details using appropriate data types
+        this.restaurantName = String(restaurantName);
+        this.orderNumber = Number(orderNumber);
+        this.items = []; // Array
+        this.totalPrice = 0; // Number
+        this.isDelivered = false; // Boolean
+    }
+
+    // Requirement 4: Support Multiple Items (Add)
+    addItem(itemName, price) {
+        this.items.push({ name: itemName, price: price });
+        this.calculateTotal();
+        this.displaySummary();
+    }
+
+    // Requirement 4: Support Multiple Items (Remove last)
+    removeItem() {
+        this.items.pop();
+        this.calculateTotal();
+        this.displaySummary();
+    }
+
+    calculateTotal() {
+        this.totalPrice = this.items.reduce((sum, item) => sum + item.price, 0);
+    }
+
+    // Requirement 3: Update Order Status
+    updateStatus() {
+        this.isDelivered = !this.isDelivered;
+        this.displaySummary();
+    }
+
+    // Requirement 2: Display Order Summary
+    displaySummary() {
+        const display = document.getElementById('order-display');
+        const itemsList = this.items.map(i => `<li>${i.name} - $${i.price}</li>`).join('');
+        
+        // Console Output (Requirement 2)
+        console.clear();
+        console.log(`Order #${this.orderNumber} from ${this.restaurantName}`);
+        console.log(`Status: ${this.isDelivered ? "Delivered" : "Pending"}`);
+        console.table(this.items);
+
+        // UI Output
+        display.innerHTML = `
+            <h2>${this.restaurantName}</h2>
+            <p><strong>Order ID:</strong> #${this.orderNumber}</p>
+            <ul>${itemsList || '<li>No items added</li>'}</ul>
+            <p><strong>Total:</strong> $${this.totalPrice.toFixed(2)}</p>
+            <p><strong>Status:</strong> <span class="status-${this.isDelivered}">
+                ${this.isDelivered ? "✅ Delivered" : "⏳ Out for Delivery"}
+            </span></p>
+        `;
+    }
+}
+
+// Initialization
+const myOrder = new FoodOrder("Pizza Palace", 10254);
+myOrder.displaySummary();
+
+// UI Interaction Functions
+function addItem() {
+    const input = document.getElementById('item-input');
+    if (input.value) {
+        // Adding item with a random price for demonstration
+        myOrder.addItem(input.value, Math.floor(Math.random() * 15) + 5);
+        input.value = '';
+    }
+}
+
+function toggleDelivery() {
+    myOrder.updateStatus();
+}
+
+</script>
+<br><hr><br>
+<h1>Mini Project 5: Student Grade Calculator</h1>
+<h1>Student Grade Calculator</h1>
+    <p>Enter student details and marks below (3 to 5 subjects).</p>
+    <label for="studentName">Student Name:</label>
+    <input type="text" id="studentName"><br><br>
+    <label for="marksInput">Marks (comma-separated, e.g., 85,92,78):</label>
+    <input type="text" id="marksInput"><br><br>
+    <button onclick="calculateGrades()">Calculate Grades (Check Console)</button>
+    <script>
+        function calculateGrades() {
+    const nameInput = document.getElementById('studentName');
+    const marksInput = document.getElementById('marksInput');
+
+    const studentName = nameInput.value.trim();
+    const marksString = marksInput.value.trim();
+
+    if (!studentName || !marksString) {
+        console.log("Error: Please enter student name and marks.");
+        return;
+    }
+
+    const marksArray = marksString.split(',').map(Number);
+    
+    if (marksArray.length < 3 || marksArray.length > 5) {
+        console.log("Error: Please enter between 3 and 5 subjects.");
+        return;
+    }
+
+    if (marksArray.some(isNaN) || marksArray.some(mark => mark < 0 || mark > 100)) {
+        console.log("Error: Please enter valid marks (0-100) as numbers.");
+        return;
+    }
+
+    // Process: Calculate total, average, and grade
+    const totalMarks = marksArray.reduce((sum, mark) => sum + mark, 0);
+    const averageMark = totalMarks / marksArray.length;
+    const finalGrade = determineGrade(averageMark);
+
+    // Display: Output structured grade report in the console
+    console.log("--- Student Grade Report ---");
+    document.write("--- Student Grade Report ---");
+    console.log(`Name: ${studentName}`);
+    document.write(`<br>Name: ${studentName}`);
+    console.log(`Total Marks: ${totalMarks}`);
+    document.write(`<br>Total Marks: ${totalMarks}`);
+    console.log(`Average Mark: ${averageMark.toFixed(2)}`);
+    document.write(`<br>Average Mark: ${averageMark.toFixed(2)}`);
+    console.log(`Final Grade: ${finalGrade}`);
+    document.write(`<br>Final Grade: ${finalGrade}`);
+    console.log("----------------------------");
+}
+
+function determineGrade(average) {
+    if (average >= 90) {
+        return 'A';
+    } else if (average >= 80) {
+        return 'B';
+    } else if (average >= 70) {
+        return 'C';
+    } else if (average >= 60) {
+        return 'D';
+    } else {
+        return 'F';
+    }
+}
+
+    </script>
+    <br><hr><br>
+<h1>Mini Project 6: Simple Interest Calculator</h1>
+<h2>Simple Interest Calculator</h2>
+    <button onclick="calculateInterest()">Calculate Interest</button>
+    <script>
+        function calculateInterest() {
+            // 1. Input: Principal amount, rate, time using prompt()
+            const principalInput = prompt("Enter the Principal Amount (P):");
+            const rateInput = prompt("Enter the Annual Interest Rate (R in %):");
+            const timeInput = prompt("Enter the Time Period (T in years):");
+
+            // Convert inputs to floating-point numbers
+            const P = parseFloat(principalInput);
+            const R = parseFloat(rateInput);
+            const T = parseFloat(timeInput);
+
+            // Basic validation to ensure inputs are valid numbers
+            if (isNaN(P) || isNaN(R) || isNaN(T) || P < 0 || R < 0 || T < 0) {
+                alert("Please enter valid positive numbers for all fields.");
+                return;
+            }
+
+            // 2. Formula: SI = (P * R * T) / 100
+            const simpleInterest = (P * R * T) / 100;
+
+            // Calculate total amount
+            const totalAmount = P + simpleInterest;
+
+            // 3. Output: Show interest and total amount payable using alert()
+            const outputMessage = `
+--- Calculation Results ---
+Principal Amount: $${P.toFixed(2)}
+Interest Rate: ${R.toFixed(2)}%
+Time Period: ${T.toFixed(2)} years
+***
+Simple Interest (SI): $${simpleInterest.toFixed(2)}
+Total Amount Payable: $${totalAmount.toFixed(2)}
+            `;
+
+            alert(outputMessage);
+        }
+    </script>
+    <br><hr><br>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects-Day2</title>
+    <style>
+        
+        .calculator-container {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 40%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+        }
+        button {
+            width: 20%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .result p {
+            margin: 0;
+            color: #333;
+        }
+        .result .final-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+ <h1>Mini Project: 1. Voting Eligibility System </h1>   
+ <h1>Voting Eligibility Checker</h1>
+
+    <label for="userAge">Enter your age:</label>
+    <input type="number" id="userAge">
+    <br><br>
+    <label for="userCountry">Enter your country (e.g., India, USA):</label>
+    <input type="text" id="userCountry">
+    <br><br>
+    <button onclick="checkEligibility()">Check Eligibility</button>
+
+    <!-- The result will be displayed here -->
+    <p id="result"></p>
+    <script>
+        function checkEligibility() {
+    // 1. Get user input from the HTML fields and store in variables
+    const ageInput = document.getElementById("userAge").value;
+    const countryInput = document.getElementById("userCountry").value;
+
+    // Convert age to a number
+    const age = parseInt(ageInput, 10);
+    // Standardize country input for reliable comparison (e.g., "India", "india", " INDIA" all become "India")
+    const citizen = countryInput.trim().charAt(0).toUpperCase() + countryInput.trim().slice(1).toLowerCase();
+
+    // 2. Check both conditions
+    const isAgeValid = age >= 18;
+    // Condition must be a citizen of "India" exactly
+    const isCitizenOfIndia = citizen === "India";
+
+    const resultElement = document.getElementById("result");
+
+    // 3. If both conditions are met, print "Eligible to Vote", else "Not Eligible to Vote"
+    if (isAgeValid && isCitizenOfIndia) {
+        resultElement.textContent = "Eligible to Vote";
+        resultElement.style.color = "green";
+    } else {
+        resultElement.textContent = "Not Eligible to Vote";
+        resultElement.style.color = "red";
+    }
+
+    // 4. Output is displayed in the HTML <p> element, which is the console for the user.
+    // The browser's developer console will also show the internal logic if you add console.log calls.
+}
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project : 2 Temperature Converter (Weather App) </h1>
+    <h1>Temperature Conversion Application</h1>
+    <p>Please open your browser's developer console (F12 or right-click -> Inspect, then select the "Console" tab) to view the output.</p>
+
+    <script>
+        // 1. Store the temperature in Celsius in a variable (celsius)
+        const celsius = 25; // Example value
+
+        // 2. and 3. Use the conversion formula and store in a variable (fahrenheit)
+        const fahrenheit = (celsius * 9/5) + 32;
+
+        // 4. The result should be displayed in the console
+        console.log(`The temperature ${celsius}°C is equal to ${fahrenheit}°F.`)
+        document.write(`The temperature ${celsius}°C is equal to ${fahrenheit}°F.`)
+        </script>
+        <br><hr><br>
+        <h1>Mini Project 3: Discount Calculator (E-Commerce Website)</h1>
+        <h2>Discount Calculator</h2>
+        <div class="form-group">
+            <label for="originalPrice">Original Price ($):</label>
+            <input type="number" id="originalPrice" placeholder="Enter price">
+        </div>
+        <div class="form-group">
+            <label for="discountRate">Discount Rate (%):</label>
+            <input type="number" id="discountRate" placeholder="Enter rate">
+        </div>
+        <button onclick="calculateDiscount()">Calculate</button>
+        <div class="result" id="resultArea">
+            <p>Final Price: <span class="final-price" id="finalPrice">$0.00</span></p>
+            <p>You Save: <span id="amountSaved">$0.00</span></p>
+        </div>
+    </div>
+    <script>
+        function calculateDiscount() {
+            // Get input values from the HTML elements
+            const originalPriceInput = document.getElementById('originalPrice');
+            const discountRateInput = document.getElementById('discountRate');
+            const finalPriceOutput = document.getElementById('finalPrice');
+            const amountSavedOutput = document.getElementById('amountSaved');
+
+            // Convert input values to numbers
+            const originalPrice = parseFloat(originalPriceInput.value);
+            const discountRate = parseFloat(discountRateInput.value);
+
+            // Validate inputs
+            if (isNaN(originalPrice) || isNaN(discountRate) || originalPrice < 0 || discountRate < 0) {
+                finalPriceOutput.textContent = "$0.00";
+                amountSavedOutput.textContent = "$0.00";
+                alert("Please enter valid positive numbers for price and rate.");
+                return;
+            }
+
+            // Calculate the final price and amount saved
+            const discountAmount = (originalPrice * discountRate) / 100;
+            const finalPrice = originalPrice - discountAmount;
+
+            // Display the results, rounded to two decimal places (for currency)
+            finalPriceOutput.textContent = `$${finalPrice.toFixed(2)}`;
+            amountSavedOutput.textContent = `$${discountAmount.toFixed(2)}`;
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 4 : Age Verification System (Signup Page)</h1>
+    <h1>Sign Up Age Check</h1>
+    <label for="ageInput">Enter your age:</label>
+    <input type="number" id="ageInput" min="0" max="120">
+    <button onclick="checkAge()">Verify Age</button>
+    
+    <!-- This div is for displaying the output on the page, in addition to the console -->
+    <p>Status: <span id="statusMessage"></span></p>
+    <script>
+        function checkAge() {
+    // 1. Get the age from the input field and store it in a variable (userAge)
+    const userAgeInput = document.getElementById('ageInput');
+    const userAge = parseInt(userAgeInput.value, 10); // Convert input string to an integer
+
+    const statusElement = document.getElementById('statusMessage');
+    
+    // Check if the input is a valid number
+    if (isNaN(userAge) || userAge < 0) {
+        console.error("Please enter a valid age.");
+        statusElement.textContent = "Invalid input. Please enter a real age.";
+        statusElement.style.color = "orange";
+        return;
+    }
+
+    // 2. The system checks if the user is 18 or older using the comparison operator (>=)
+    if (userAge >= 18) {
+        // 3. If the user is eligible, display "Access Granted"
+        const message = "Access Granted";
+        console.log(message); // 4. Output to the console
+        statusElement.textContent = message;
+        statusElement.style.color = "green";
+    } else {
+        // 3. Otherwise, display "Access Denied"
+        const message = "Access Denied";
+        console.log(message); // 4. Output to the console
+        statusElement.textContent = message;
+        statusElement.style.color = "red";
+    }
+}
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 5: Bill Splitter with Tip Calculator</h1>
+    <h2>Restaurant Bill Splitter</h2>
+
+    <div class="form-group">
+        <label for="totalBill">Total Bill Amount ($):</label>
+        <input type="number" id="totalBill" placeholder="Enter total bill">
+    </div>
+
+    <div class="form-group">
+        <label for="numPeople">Number of People:</label>
+        <input type="number" id="numPeople" placeholder="Enter number of people">
+    </div>
+
+    <div class="form-group">
+        <label for="tipPercentage">Tip Percentage (%):</label>
+        <input type="number" id="tipPercentage" placeholder="Enter tip percentage">
+    </div>
+
+    <button onclick="calculateBill()">Calculate</button>
+
+    <div id="results">
+        <h3>Results:</h3>
+        <p><strong>Tip Amount:</strong> $<span id="tipAmount">0.00</span></p>
+        <p><strong>Total Bill with Tip:</strong> $<span id="totalBillWithTip">0.00</span></p>
+        <p><strong>Each Person's Share:</strong> $<span id="eachPersonShare">0.00</span></p>
+    </div>
+    <script>
+        function calculateBill() {
+            // Get input values
+            const totalBill = parseFloat(document.getElementById('totalBill').value);
+            const numPeople = parseInt(document.getElementById('numPeople').value);
+            const tipPercentage = parseFloat(document.getElementById('tipPercentage').value);
+
+            // Validate inputs
+            if (isNaN(totalBill) || isNaN(numPeople) || isNaN(tipPercentage) || totalBill <= 0 || numPeople <= 0) {
+                alert("Please enter valid numbers for all fields.");
+                return;
+            }
+
+            // Calculate tip amount
+            const tipAmount = totalBill * (tipPercentage / 100);
+
+            // Calculate total bill with tip
+            const totalBillWithTip = totalBill + tipAmount;
+
+            // Calculate each person's share
+            const eachPersonShare = totalBillWithTip / numPeople;
+
+            // Display results
+            document.getElementById('tipAmount').textContent = tipAmount.toFixed(2);
+            document.getElementById('totalBillWithTip').textContent = totalBillWithTip.toFixed(2);
+            document.getElementById('eachPersonShare').textContent = eachPersonShare.toFixed(2);
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 6: BMI Calculator (Body Mass Index)</h1>
+    <div class="container">
+        <h2>BMI Calculator</h2>
+        <div class="form-group">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" placeholder="Enter weight in kg">
+        </div>
+        <div class="form-group">
+            <label for="height">Height (meters):</label>
+            <input type="number" id="height" step="0.01" placeholder="Enter height in meters">
+        </div>
+        <button onclick="calculateBMI()">Calculate BMI</button>
+        <div id="result1"></div>
+    </div>
+    <script>
+     function calculateBMI() {
+    // Get input values from the HTML form
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const resultDiv = document.getElementById('result1');
+
+    // Validate inputs
+    if (isNaN(weight) || isNaN(height) || height <= 0 || weight <= 0) {
+        resultDiv.innerHTML = "Please enter valid weight and height.";
+        return;
+    }
+
+    // Calculate BMI using the formula: BMI = weight / (height * height)
+    const bmi = weight / (height * height);
+    let category = "";
+
+    // Categorize BMI
+    if (bmi < 18.5) {
+        category = "Underweight";
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+        category = "Normal";
+    } else if (bmi >= 25 && bmi <= 29.9) {
+        category = "Overweight";
+    } else {
+        category = "Obese";
+    }
+
+    // Display the result and category
+    resultDiv.innerHTML = `Your BMI is **${bmi.toFixed(2)}** (${category}).`;
+}
+   
+    </script>
+</body>
+</html>
