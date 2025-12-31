@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects-Day8</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 20%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .palindrome {
+            color: green;
+        }
+        .not-palindrome {
+            color: red;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: none;
+        }
+        .valid {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            color: #1b5e20;
+        }
+        .invalid {
+            background-color: #ffebee;
+            border-color: #f44336;
+            color: #b71c1c;
+        }
+        .highlight {
+            font-weight: bold;
+        }
+        .output-box { background: #f4f4f4; padding: 15px; border-radius: 8px; }
+        .label { font-weight: bold; color: #333; margin-top: 10px; }
+        .highlight { background-color: yellow; padding: 0 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+<h1>Mini Project 1 : Username Generator </h1>  
+<h2>Generate Your Username</h2>
+
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName"><br><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName"><br><br>
+
+    <button onclick="generateUsername()">Generate Username</button><br><br>
+
+    <h3>Generated Username:</h3>
+    <p id="output"></p>
+
+    <script>
+        function generateUsername() {
+            // Get user input from the input fields
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+
+            // Take the first 3 letters of the first name (convert to lowercase for consistency)
+            const firstPart = firstName.substring(0, 3).toLowerCase();
+            // Take the first 3 letters of the last name (convert to lowercase)
+            const secondPart = lastName.substring(0, 3).toLowerCase();
+
+            // Generate a random number between 100 and 999
+            const randomNumber = Math.floor(Math.random() * 900) + 100;
+
+            // Combine the parts to form the username
+            const username = firstPart + secondPart + randomNumber;
+
+            // Display the generated username
+            document.getElementById('output').textContent = username;
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 2 : Palindrome Checker (Real-World Mini Project) </h1>
+<div class="container">
+        <h1>Palindrome Checker</h1>
+        <p>Enter a word or phrase to check if it's a palindrome.</p>
+        <input type="text" id="inputText" placeholder="Enter text here">
+        <button onclick="checkPalindrome()">Check</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function checkPalindrome() {
+            // Requirement 1: Get user input
+            const inputElement = document.getElementById('inputText');
+            const resultElement = document.getElementById('result');
+            const inputString = inputElement.value;
+
+            if (inputString.trim() === "") {
+                resultElement.textContent = "Please enter some text.";
+                resultElement.className = "not-palindrome";
+                return;
+            }
+
+            // Requirement 2 & 3: Remove spaces/special characters & convert to lowercase
+            // The regex /[_\W]/g matches any underscore or non-word character (includes spaces and most special characters)
+            const cleanedString = inputString.toLowerCase().replace(/[_\W]/g, '');
+
+            // Requirement 4: Check if the word is the same forward and backward
+            // Reverse the cleaned string: split into array, reverse array, join back to string
+            const reversedString = cleanedString.split('').reverse().join('');
+
+            // Requirement 5: Display "Palindrome" or "Not a Palindrome"
+            if (cleanedString === reversedString) {
+                resultElement.textContent = `"${inputString}" is a Palindrome!`;
+                resultElement.className = "palindrome";
+            } else {
+                resultElement.textContent = `"${inputString}" is Not a Palindrome.`;
+                resultElement.className = "not-palindrome";
+            }
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini project 3 : Text Reverser</h1>
+    <h1>Text Reverser</h1>
+
+    <label for="inputText1">Enter text to reverse:</label><br>
+    <textarea id="inputText1" placeholder="Type here..."></textarea><br>
+    <button onclick="reverseText()">Reverse Text</button>
+
+    <h2>Reversed Text:</h2>
+    <div id="outputArea"></div>
+
+    <script>
+        function reverseText() {
+            // Get the value from the input textarea
+            const inputString1 = document.getElementById('inputText1').value;
+
+            // Reverse the string
+            // 1. Split the string into an array of characters
+            // 2. Reverse the order of elements in the array
+            // 3. Join the characters back into a single string
+            const reversedString1 = inputString1.split('').reverse().join('');
+
+            // Display the result in the output div
+            document.getElementById('outputArea').textContent = reversedString1;
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini project 4 : Word Counter  </h1>
+    <h2>Word Counter</h2>
+    <textarea id="userInput" placeholder="Enter your sentence here..." oninput="countWords()"></textarea>
+    
+    <div class="count-box">
+        Words: <span id="wordCount">0</span>
+    </div>
+
+    <script>
+        function countWords() {
+            // 1. Get the user input
+            const text = document.getElementById("userInput").value.trim();
+            
+            // 2. Split by spaces (using regex to handle multiple spaces)
+            // This filters out empty strings caused by extra spaces
+            const words = text.split(/\s+/).filter(word => word.length > 0);
+            
+            // 3. Display the count
+            document.getElementById("wordCount").innerText = words.length;
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 5: Email Formatter & Validator</h1>
+<div class="container">
+        <h2>Email Formatter & Validator</h2>
+        <label for="emailInput">Enter an email address:</label>
+        <input type="email" id="emailInput" placeholder="e.g., user@example.com">
+        <button onclick="validateEmail()">Validate and Format</button>
+        <div id="result1"></div>
+    </div>
+
+    <script>
+        function validateEmail() {
+            const emailInput = document.getElementById('emailInput');
+            const resultDiv = document.getElementById('result1');
+            const email = emailInput.value.trim();
+
+            // Regex for basic email format validation
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            resultDiv.style.display = 'block';                  
+
+            if (emailRegex.test(email)) {
+                // Extract username and domain using a more specific regex with capture groups
+                const match = email.match(/^([^@]+)@(.+)$/);
+                const username = match[1];
+                const domain = match[2];
+
+                resultDiv.className = 'valid';
+                resultDiv.innerHTML = `
+                    <p><span class="highlight">Validation Status:</span> Valid Email Format</p>
+                    <p><span class="highlight">Full Email:</span> ${email}</p>
+                    <p><span class="highlight">Username:</span> ${username}</p>
+                    <p><span class="highlight">Domain:</span> ${domain}</p>
+                `;
+            } else {
+                resultDiv.className = 'invalid';
+                resultDiv.innerHTML = `
+                    <p><span class="highlight">Validation Status:</span> Invalid Email Format</p>
+                    <p>The entered email address: <span class="highlight">${email}</span> does not meet the required format.</p>
+                `;
+            }
+        }
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 6: Sentence Transformer</h1>
+<h2>Sentence Transformer</h2>
+    <textarea id="inputBox" placeholder="Type any sentence here..." oninput="transform()"></textarea>
+
+    <div class="output-box">
+        <div class="label">Capitalized:</div>
+        <div id="capitalized">-</div>
+
+        <div class="label">Snake Case & Kebab Case:</div>
+        <div id="cases">-</div>
+
+        <div class="label">Stats:</div>
+        <div id="stats">Words: 0 | Characters: 0</div>
+
+        <div class="label">Longest & Shortest Words:</div>
+        <div id="highlights">-</div>
+    </div>
+ <script>
+        function transform() {
+            const input = document.getElementById('inputBox').value.trim();
+            if (!input) return;
+
+            const words = input.split(/\s+/);
+            const cleanWords = words.map(w => w.replace(/[^a-zA-Z0-9]/g, ''));
+
+            // 1. Capitalize Each Word
+            const capitalized = words.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+            document.getElementById('capitalized').innerText = capitalized;
+
+            // 2. Snake and Kebab Case
+            const snake = cleanWords.join('_').toLowerCase();
+            const kebab = cleanWords.join('-').toLowerCase();
+            document.getElementById('cases').innerText = `snake_case: ${snake} | kebab-case: ${kebab}`;
+
+            // 3. Stats
+            document.getElementById('stats').innerText = `Words: ${words.length} | Characters: ${input.length}`;
+            // 4. Highlight Longest and Shortest
+            const sorted = [...cleanWords].sort((a, b) => a.length - b.length);
+            const shortest = sorted[0];
+            const longest = sorted[sorted.length - 1];
+            
+            document.getElementById('highlights').innerHTML = 
+                `Shortest: <span class="highlight">${shortest}</span> | Longest: <span class="highlight">${longest}</span>`;
+        }
+    </script>
+    <br><hr><br>
+    <h1>8.Use if-else to check if a number is positive, negative
+</body>
+</html>

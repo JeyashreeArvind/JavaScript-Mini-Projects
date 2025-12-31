@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects- Day 5</title>
+    <style>
+        .calculator-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 300px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 200px;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.result-container {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 2px solid #eee;
+}
+
+#grade {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.add-item-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+input[type="text"], input[type="number"], button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+}
+
+#cartItems {
+    list-style-type: none;
+    padding: 0;
+}
+
+#cartItems li {
+    display: flex;
+    
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.item-price {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.total-section {
+    margin-top: 20px;
+    display: flex;
+    width:300px;
+    padding-top: 10px;
+    border-top: 2px solid #333;
+}
+
+#totalPrice {
+    font-size: 1.2em;
+    color: #dc3545;
+}
+    </style></head>
+<body>
+<h1>Mini Project : 1 Student Grade Calculator</h1>
+<div class="calculator-container">
+        <h2>Student Grade Calculator</h2>
+        <div class="input-group">
+            <label for="subject1">Subject 1 Marks:</label>
+            <input type="number" id="subject1" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="subject2">Subject 2 Marks:</label>
+            <input type="number" id="subject2" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="subject3">Subject 3 Marks:</label>
+            <input type="number" id="subject3" min="0" max="100">
+        </div>
+        <button onclick="calculateGrade()">Calculate Grade</button>
+        <div class="result-container" id="results">
+            <p><strong>Total Marks:</strong> <span id="total"></span></p>
+            <p><strong>Average Marks:</strong> <span id="average"></span></p>
+            <p><strong>Grade:</strong> <span id="grade"></span></p>
+        </div>
+    </div>
+    <script>
+function calculateGrade() {
+    // 1. User Input: Get marks from input fields
+    const sub1 = parseFloat(document.getElementById('subject1').value) || 0;
+    const sub2 = parseFloat(document.getElementById('subject2').value) || 0;
+    const sub3 = parseFloat(document.getElementById('subject3').value) || 0;
+
+    // Validate inputs are within a reasonable range (0-100)
+    if (sub1 > 100 || sub2 > 100 || sub3 > 100 || sub1 < 0 || sub2 < 0 || sub3 < 0) {
+        alert("Please enter marks between 0 and 100.");
+        return;
+    }
+
+    // 2. Total & Average Calculation
+    const totalMarks = sub1 + sub2 + sub3;
+    const averageMarks = totalMarks / 3;
+
+    // 3. Grade Assignment
+    let grade;
+    if (averageMarks >= 90) {
+        grade = 'A';
+    } else if (averageMarks >= 75) {
+        grade = 'B';
+    } else if (averageMarks >= 50) {
+        grade = 'C';
+    } else {
+        grade = 'F';
+    }
+
+    // 4. Display Result
+    document.getElementById('total').textContent = totalMarks.toFixed(2);
+    document.getElementById('average').textContent = averageMarks.toFixed(2);
+    document.getElementById('grade').textContent = grade;
+}
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 2:  Grocery Shopping List </h1>
+        <script>
+        let groceryList = [];
+
+        function addItem() {
+            const item = prompt("Enter the item to add:");
+            if (item) {
+                groceryList.push(item);
+                alert(item + " has been added to the list.");
+            }
+        }
+
+        function viewItems() {
+            if (groceryList.length === 0) {
+                alert("The grocery list is empty.");
+            } else {
+                alert("Grocery List:\n" + groceryList.join("\n"));
+            }
+        }
+
+        function removeItem() {
+            const item = prompt("Enter the item to remove:");
+            const index = groceryList.indexOf(item);
+            if (index > -1) {
+                groceryList.splice(index, 1);
+                alert(item + " has been removed from the list.");
+            } else {
+                alert(item + " is not found in the list.");
+            }
+        }
+    </script>
+    <button onclick="addItem()">Add Item</button>
+    <button onclick="viewItems()">View Items</button>
+    <button onclick="removeItem()">Remove Item</button>
+    <br><hr><br>
+    <h1>Mini Project 3: Tip Calculator </h1>
+        <script>
+        function calculateTip(bill, tipPercent) {
+            return (bill * tipPercent) / 100;
+        }
+
+        function calculateTotal(bill, tip) {
+            return bill + tip;
+        }
+
+        function showTipCalculator() {
+            const billAmount = parseFloat(prompt("Enter the bill amount:"));
+            const tipPercentage = parseFloat(prompt("Enter the tip percentage:"));
+
+            if (isNaN(billAmount) || isNaN(tipPercentage) || billAmount < 0 || tipPercentage < 0) {
+                alert("Please enter valid positive numbers for bill amount and tip percentage.");
+                return;
+            }
+
+            const tipAmount = calculateTip(billAmount, tipPercentage);
+            const totalAmount = calculateTotal(billAmount, tipAmount);
+
+            alert(`Tip Amount: $${tipAmount.toFixed(2)}\nTotal Amount: $${totalAmount.toFixed(2)}`);
+        }
+    </script>
+    <button onclick="showTipCalculator()">Calculate Tip</button>  
+    <br><hr><br>
+    <h1>Mini Project 4: Basic To-Do List (Console Version) </h1>
+    <button onclick="viewTasks()">View Tasks</button>
+    <button onclick="addTask(prompt('Enter a new task:'))">Add Task</button>
+    <button onclick="markTaskCompleted(parseInt(prompt('Enter the task number to mark as completed:')))">Mark Task Completed</button>
+    <script>
+        let todoList = [];
+
+        function addTask(task) {
+            todoList.push({ task: task, completed: false });
+            console.log(`Task "${task}" added.`);
+            document.write(`Task "${task}" added.<br>`);
+        }
+
+        function viewTasks() {
+            if (todoList.length === 0) {
+                console.log("No tasks in the to-do list.");
+                document.write("No tasks in the to-do list.<br>");
+                return;
+            }
+            console.log("To-Do List:");
+            todoList.forEach((item, index) => {
+                const status = item.completed ? "[Completed]" : "[Pending]";
+                console.log(`${index + 1}. ${status} ${item.task}`);
+                document.write(`${index + 1}. ${status} ${item.task}<br>`); 
+            });
+        }
+
+        function markTaskCompleted(index) {
+            if (index < 1 || index > todoList.length) {
+                console.log("Invalid task number.");
+                document.write("Invalid task number.<br>");
+                return;
+            }
+            todoList[index - 1].completed = true;
+            console.log(`Task "${todoList[index - 1].task}" marked as completed.`);
+            document.write(`Task "${todoList[index - 1].task}" marked as completed.<br>`);
+        }
+
+                </script>
+        <br><hr><br>   
+        <h1>Mini Project 5: Bill Splitting Calculator using , html, css , JavaScript</h1>
+        <button onclick="splitBill()">Split Bill</button>
+    <script>            
+        function splitBill() {
+            const totalBill = parseFloat(prompt("Enter the total bill amount:"));
+            const numberOfPeople = parseInt(prompt("Enter the number of people to split the bill:"));
+
+            if (isNaN(totalBill) || isNaN(numberOfPeople) || totalBill < 0 || numberOfPeople <= 0) {
+                alert("Please enter valid positive numbers for bill amount and number of people.");
+                return;
+            }
+
+            const amountPerPerson = totalBill / numberOfPeople;
+
+            alert(`Each person should pay: $${amountPerPerson.toFixed(2)}`);
+        }           
+    </script>   
+     <br><hr><br>
+     <h1>Mini Project 6: Shopping Cart System  </h1>
+     <div class="container">
+        <h1>My Shopping Cart</h1>
+        
+        <!-- Add Item Section -->
+        <div class="add-item-section">
+            <input type="text" id="itemName" placeholder="Item Name">
+            <input type="number" id="itemPrice" placeholder="Price" min="0">
+            <button onclick="addItem()">Add Item</button>
+        </div>
+
+        <!-- Cart Items List -->
+        <ul id="cartItems">
+            <!-- Items will be dynamically added here by JavaScript -->
+        </ul>
+
+        <!-- Total Price Section -->
+        <div class="total-section">
+            <strong>Total:</strong>
+            <span id="totalPrice">$0.00</span>
+        </div>
+    </div>
+    <script>
+        let cart = [];
+
+function addItem() {
+    const itemNameInput = document.getElementById('itemName');
+    const itemPriceInput = document.getElementById('itemPrice');
+    
+    const name = itemNameInput.value.trim();
+    const price = parseFloat(itemPriceInput.value);
+
+    if (name && !isNaN(price) && price > 0) {
+        const item = {
+            name: name,
+            price: price
+        };
+        cart.push(item);
+        renderCart();
+        calculateTotal();
+        itemNameInput.value = '';
+        itemPriceInput.value = '';
+        itemNameInput.focus();
+    } else {
+        alert('Please enter a valid name and price.');
+    }
+}
+
+function renderCart() {
+    const cartItemsList = document.getElementById('cartItems');
+    cartItemsList.innerHTML = '';
+    
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <span>${item.name}</span>
+            <span class="item-price">$${item.price.toFixed(2)}</span>
+        `;
+        cartItemsList.appendChild(li);
+    });
+}
+
+function calculateTotal() {
+    const totalPriceSpan = document.getElementById('totalPrice');
+    
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    
+    totalPriceSpan.textContent = `$${total.toFixed(2)}`;
+}
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects- Day 7</title>
+    <style>
+    .container { max-width: 1000px; margin: auto;border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
+        h1, h2 { color: #333; }
+        form { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        input, button { padding: 8px; margin-right: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .increase-btn { background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        .increase-btn:hover { background-color: #45a049; }
+        .summary-box { padding: 15px; border: 1px solid #ccc; border-radius: 5px; flex: 1; }
+        .income { color: green; }
+        .expense { color: red; }
+        .balance { font-weight: bold; }
+        input, button { padding: 8px; margin-top: 5px;border-radius: 5px; }
+        button{color:black;background-color: #4CAF50;border-radius: 5px;}
+    </style>
+</head>
+<body>
+ <h1>Mini Project 1 : Employee Management System   </h1>   
+<div class="container">
+        <h1>Employee Management System</h1>
+
+        <h2>Add New Employee</h2>
+        <form id="employeeForm">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="text" id="position" placeholder="Position" required>
+            <input type="number" id="salary" placeholder="Salary" required min="0">
+            <button type="submit">Add Employee</button>
+        </form>
+
+        <h2>Current Employees</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Salary ($)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTableBody">
+                <!-- Employee records will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Array to store employee objects
+        const employees = [];
+
+        // 1. Constructor function for Employee objects
+        function Employee(name, position, salary) {
+            this.name = name;
+            this.position = position;
+            this.salary = salary;
+        }
+
+        // 2. Add a method to the Employee prototype to increase salary
+        Employee.prototype.increaseSalary = function(amount) {
+            this.salary += amount;
+            // Re-render the table to reflect the change
+            displayEmployees();
+        };
+
+        // Function to display employees in the HTML table
+        function displayEmployees() {
+            const tableBody = document.getElementById('employeeTableBody');
+            tableBody.innerHTML = ''; // Clear existing records
+
+            employees.forEach((employee, index) => {
+                const row = tableBody.insertRow();
+                
+                row.insertCell(0).textContent = employee.name;
+                row.insertCell(1).textContent = employee.position;
+                // Format salary with commas and fixed decimals
+                row.insertCell(2).textContent = employee.salary.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                
+                const actionCell = row.insertCell(3);
+                const increaseButton = document.createElement('button');
+                increaseButton.textContent = 'Increase 10%';
+                increaseButton.className = 'increase-btn';
+                increaseButton.onclick = () => {
+                    // Increase salary by 10%
+                    employee.increaseSalary(employee.salary * 0.10);
+                };
+                actionCell.appendChild(increaseButton);
+            });
+        }
+
+        document.getElementById('employeeForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            const nameInput = document.getElementById('name');
+            const positionInput = document.getElementById('position');
+            const salaryInput = document.getElementById('salary');
+
+            const name = nameInput.value;
+            const position = positionInput.value;
+            const salary = parseFloat(salaryInput.value);
+
+            // Create a new employee object using the constructor
+            const newEmployee = new Employee(name, position, salary);
+
+            // Store the new employee in the array
+            employees.push(newEmployee);
+
+            // Display the updated list of employees
+            displayEmployees();
+
+            // Clear the form fields
+            event.target.reset();
+        });  
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 2 : Library Management System (Using Constructor)  </h1>
+    <h1>Library Management System</h1>
+
+    <div class="container">
+        <!-- Add Book Section -->
+        <div class="section">
+            <h2>Add Book</h2>
+            <input type="text" id="titleInput" placeholder="Title">
+            <input type="text" id="authorInput" placeholder="Author">
+            <input type="number" id="yearInput" placeholder="Year">
+            <button onclick="addBook()">Add Book</button>
+        </div>
+
+        <!-- Search Book Section -->
+        <div class="section">
+            <h2>Search Book by Title</h2>
+            <input type="text" id="searchInput" placeholder="Enter title to search">
+            <button onclick="searchBooks()">Search</button>
+            <h3>Search Results:</h3>
+            <ul id="searchResults"></ul>
+        </div>
+    </div>
+
+    <!-- Display Books Section -->
+    <div class="section">
+        <h2>Current Library Catalog</h2>
+        <ul id="bookList"></ul>
+    </div>
+
+    <script>
+        // Array to store all books
+        let library = [];
+
+        // 1. Create a Book constructor
+        function Book(title, author, year) {
+            this.title = title;
+            this.author = author;
+            this.year = year;
+        }
+
+        // Function to add a new book to the library
+        function addBook() {
+            const title = document.getElementById('titleInput').value;
+            const author = document.getElementById('authorInput').value;
+            const year = document.getElementById('yearInput').value;
+
+            if (title && author && year) {
+                const newBook = new Book(title, author, parseInt(year));
+                library.push(newBook);
+                displayBooks(); // Refresh the display
+                clearInputs();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // 2. Function to display books
+        function displayBooks(booksToDisplay = library, listId = 'bookList') {
+            const listElement = document.getElementById(listId);
+            listElement.innerHTML = ''; // Clear existing list
+
+            booksToDisplay.forEach(book => {
+                const li = document.createElement('li');
+                li.textContent = `"${book.title}" by ${book.author} (${book.year})`;
+                listElement.appendChild(li);
+            });
+        }
+
+        // 3. Function to search for books by title
+        function searchBooks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm.trim() === "") {
+                displayBooks([], 'searchResults'); // Clear results if search is empty
+                return;
+            }
+
+            const results = library.filter(book => 
+                book.title.toLowerCase().includes(searchTerm)
+            );
+
+            displayBooks(results, 'searchResults'); // Display filtered results in the search area
+        }
+
+        // Helper function to clear input fields after adding a book
+        function clearInputs() {
+            document.getElementById('titleInput').value = '';
+            document.getElementById('authorInput').value = '';
+            document.getElementById('yearInput').value = '';
+        }
+
+        // Initial display (empty library)
+        displayBooks();
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 3: Student Record Manager (Using Constructor & 
+Prototypes)</h1>
+    <h1>Student Record Manager</h1>
+    <div class="container">
+        <!-- Add Student Section -->
+        <div class="section">
+            <h2>Add Student</h2>
+            <input type="text" id="studentNameInput" placeholder="Name">
+            <input type="number" id="studentAgeInput" placeholder="Age">
+            <input type="number" id="studentGradeInput" placeholder="Grade">
+            <button onclick="addStudent()">Add Student</button>
+        </div>
+
+        <!-- Display Students Section -->
+        <div class="section">
+            <h2>Student Records</h2>
+            <ul id="studentList"></ul>
+            <h3>Class Average Grade: <span id="classAverage">0</span></h3>
+        </div>
+    </div>
+
+    <script>
+        // Array to store student records
+        let students = [];
+
+        // 1. Create a Student constructor
+        function Student(name, age, grade) {
+            this.name = name;
+            this.age = age;
+            this.grade = grade;
+        }
+
+        // 2. Method to get student details
+        Student.prototype.getDetails = function() {
+            return `${this.name}, Age: ${this.age}, Grade: ${this.grade}`;
+        };
+
+        // Function to add a new student
+        function addStudent() {
+            const name = document.getElementById('studentNameInput').value;
+            const age = parseInt(document.getElementById('studentAgeInput').value);
+            const grade = parseFloat(document.getElementById('studentGradeInput').value);
+
+            if (name && age && grade) {
+                const newStudent = new Student(name, age, grade);
+                students.push(newStudent);
+                displayStudentDetails(students);
+                displayClassAverage();
+                clearStudentInputs();
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        // 3. Function to display student details
+        function displayStudentDetails(studentArray) {
+            const listElement = document.getElementById('studentList');
+            listElement.innerHTML = ''; // Clear existing list
+
+            studentArray.forEach(student => {
+                const li = document.createElement('li');
+                li.textContent = student.getDetails();
+                listElement.appendChild(li);
+            });
+        }
+
+        // 4. Function to calculate and display class average grade     
+        function displayClassAverage() {
+            if (students.length === 0) {
+                document.getElementById('classAverage').textContent = '0';
+                return;
+            }
+
+            const totalGrade = students.reduce((sum, student) => sum + student.grade, 0);
+            const averageGrade = (totalGrade / students.length).toFixed(2);
+            document.getElementById('classAverage').textContent = averageGrade;
+        }
+        // Helper function to clear input fields after adding a student
+        function clearStudentInputs() {
+            document.getElementById('studentNameInput').value = '';
+            document.getElementById('studentAgeInput').value = '';
+            document.getElementById('studentGradeInput').value = '';
+        }   
+        // Initial display (empty student list)
+        displayStudentDetails(students);
+        displayClassAverage();
+    </script>
+        <br><hr><br>
+        <h1>Mini Project 4: Budget Manager (Using Modules + Factory Functions) </h1>
+        <h1>Budget Manager</h1>
+
+    <div class="container">
+        <div class="summary-box">
+            <h2>Summary</h2>
+            <p>Total Income: <span id="total-income" class="income">$0.00</span></p>
+            <p>Total Expense: <span id="total-expense" class="expense">$0.00</span></p>
+            <p>Balance: <span id="balance" class="balance">$0.00</span></p>
+        </div>
+
+        <div class="summary-box">
+            <h2>Add Transaction</h2>
+            <input type="number" id="amount-input" placeholder="Amount" min="0">
+            <button id="add-income-btn">Add Income</button>
+            <button id="add-expense-btn">Add Expense</button>
+        </div>
+    </div>
+
+    <!-- Set type="module" to enable imports/exports -->
+    <script type="module" src="main.js"></script>
+    <br><hr><br>
+    <h1>Mini project 5 :Shopping Cart System </h1>
+    <h1>Shopping Cart System</h1>
+    <div class="container">
+        <h2>Add Item to Cart</h2>
+        <input type="text" id="item-name-input" placeholder="Item Name">
+        <input type="number" id="item-price-input" placeholder="Item Price" min="0">
+        <button id="add-item-btn">Add Item</button>
+
+        <h2>Cart Items</h2>
+        <ul id="cartItems"></ul>
+        <div class="total-section">
+            <span>Total:</span>
+            <span id="totalAmount">$0.00</span>
+        </div>
+    </div>  
+    <script>
+        // Shopping Cart Module
+        const ShoppingCart = (function() {
+            let cart = [];
+
+            function addItem(name, price) {
+                cart.push({ name, price });
+                updateUI();
+            }
+
+            function getTotal() {
+                return cart.reduce((total, item) => total + item.price, 0);
+            }
+
+            function updateUI() {
+                const cartItemsElement = document.getElementById('cartItems');
+                const totalAmountElement = document.getElementById('totalAmount');
+
+                // Clear existing items
+                cartItemsElement.innerHTML = '';
+
+                // Display cart items
+                cart.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = `${item.name} - $${item.price.toFixed(2)}`;
+                    cartItemsElement.appendChild(li);
+                });
+
+                // Update total amount
+                totalAmountElement.textContent = `$${getTotal().toFixed(2)}`;
+            }
+
+            return {
+                addItem,
+                getTotal,
+                updateUI
+            };
+        })();
+
+        // Event listener for adding items
+        document.getElementById('add-item-btn').addEventListener('click', () => {
+            const nameInput = document.getElementById('item-name-input');
+            const priceInput = document.getElementById('item-price-input');
+
+            const name = nameInput.value;
+            const price = parseFloat(priceInput.value);
+
+            if (name && !isNaN(price) && price >= 0) {
+                ShoppingCart.addItem(name, price);
+                // Clear inputs
+                nameInput.value = '';
+                priceInput.value = '';
+            } else {
+                alert('Please enter valid item name and price.');
+            }
+        }); 
+                ShoppingCart.updateUI();    
+    </script>
+    <br><hr><br>
+    <h1>Mini project 6 : Bank Account Management   </h1>
+    <h1>Bank Account Management System</h1>
+
+    <div id="account-status">
+        <h2>Account Details</h2>
+        <p>Account Number: <span id="account-number"></span></p>
+        <p>Current Balance: $<span id="account-balance">0.00</span></p>
+    </div>
+
+    <div id="operations">
+        <h2>Operations</h2>
+        <div>
+            <h3>Deposit</h3>
+            <input type="number" id="deposit-amount" placeholder="Enter amount">
+            <button onclick="handleDeposit()">Deposit</button>
+        </div>
+        <div>
+            <h3>Withdraw</h3>
+            <input type="number" id="withdraw-amount" placeholder="Enter amount">
+            <button onclick="handleWithdraw()">Withdraw</button>
+        </div>
+    </div>
+
+    <p id="message-area" style="color: red;"></p>
+    <script>
+        // 1. Create a BankAccount constructor with accountNumber and balance.
+class BankAccount {
+    constructor(accountNumber, initialBalance = 0) {
+        this.accountNumber = accountNumber;
+        this.balance = initialBalance;
+    }
+
+    // 2. Implement methods for depositing and withdrawing money.
+    deposit(amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            return true;
+        }
+        return false;
+    }
+
+    // 3. Prevent withdrawals if the balance is insufficient.
+    withdraw(amount) {
+        if (amount > 0 && amount <= this.balance) {
+            this.balance -= amount;
+            return true; // Withdrawal successful
+        } else if (amount > this.balance) {
+            // Insufficient balance
+            return false;
+        }
+        return false; // Invalid amount
+    }
+
+    getBalance() {
+        return this.balance;
+    }
+}
+
+// Initialize a sample account
+const myAccount = new BankAccount('SB-123', 500);
+
+// Function to update the UI with the current balance and account number
+function updateUI() {
+    document.getElementById('account-number').textContent = myAccount.accountNumber;
+    document.getElementById('account-balance').textContent = myAccount.getBalance().toFixed(2);
+}
+
+// Handle deposit action
+function handleDeposit() {
+    const amountInput = document.getElementById('deposit-amount');
+    const amount = parseFloat(amountInput.value);
+    const messageArea = document.getElementById('message-area');
+
+    if (isNaN(amount) || amount <= 0) {
+        messageArea.textContent = 'Please enter a valid, positive amount for deposit.';
+    } else {
+        myAccount.deposit(amount);
+        updateUI();
+        messageArea.textContent = `Successfully deposited $${amount.toFixed(2)}.`;
+        amountInput.value = '';
+    }
+}
+
+// Handle withdraw action
+function handleWithdraw() {
+    const amountInput = document.getElementById('withdraw-amount');
+    const amount = parseFloat(amountInput.value);
+    const messageArea = document.getElementById('message-area');
+
+    if (isNaN(amount) || amount <= 0) {
+        messageArea.textContent = 'Please enter a valid, positive amount for withdrawal.';
+    } else if (myAccount.withdraw(amount)) {
+        updateUI();
+        messageArea.textContent = `Successfully withdrawn $${amount.toFixed(2)}.`;
+        amountInput.value = '';
+    } else {
+        messageArea.textContent = 'Error: Insufficient funds or invalid amount.';
+    }
+}
+
+// Initial UI update on page load
+updateUI();
+
+    </script>
+    <br><hr><br>
+ </body>
+</html>
