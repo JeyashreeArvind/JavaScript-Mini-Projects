@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects-Day12</title>
+    <style>
+       body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 20px; }
+.container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.stats-card { background: #0f73d7; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+.form-container, .search-box { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 120px; }
+button { padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button:hover { background: #219150; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+th { background-color: #f8f9fa; }
+.low-stock { color: #e74c3c; font-weight: bold; }
+
+
+.container1 {
+    max-width: 1000px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.status-available {
+    color: green;
+    font-weight: bold;
+}
+
+.status-borrowed {
+    color: red;
+    font-weight: bold;
+}
+
+.action-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.borrow-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.return-btn {
+    background-color: #ffc107;
+    color: black;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container3 {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-container {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 150px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-grow: 0;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.table-container {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.pass {
+    color: green;
+    font-weight: bold;
+}
+
+.fail {
+    color: red;
+    font-weight: bold;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.container4 {
+    max-width: 900px;
+    margin: auto;
+}
+
+h1, h2 {
+    color: #0056b3;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.dashboard {
+    display: flex;
+    gap: 20px;
+}
+
+.dashboard .card {
+    flex: 1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+#revenueDisplay {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #28a745;
+}
+
+
+.container5 {
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+}
+
+.form-container {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+form input, form button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+form button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #218838;
+}
+
+.dashboard-container {
+    margin-top: 20px;
+}
+
+#sortButton {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+#performanceTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#performanceTable th, #performanceTable td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+#performanceTable th {
+    background-color: #007bff;
+    color: white;
+}
+
+.pass {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.fail {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.distinction {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.container6 { max-width: 900px; margin: auto; }
+.card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+h1, h3 { color: #333; }
+
+form { display: flex; gap: 10px; flex-wrap: wrap; }
+input { padding: 10px; border: 1px solid #ddd; border-radius: 4px; flex: 1; min-width: 150px; }
+button { padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button:hover { background: #218838; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
+th { background-color: #f8f9fa; }
+
+.status-pending { color: #e67e22; font-weight: bold; }
+.status-fulfilled { color: #27ae60; font-weight: bold; }
+.btn-fulfill { background: #007bff; font-size: 0.8em; }
+.btn-fulfill:hover { background: #0056b3; }
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+        <h1>Inventory Management System</h1>
+
+        <!-- Stats Section -->
+        <div class="stats-card">
+            <h3>Total Inventory Value: <span id="totalValue">$0.00</span></h3>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search by ID or Name..." onkeyup="searchProduct()">
+        </div>
+
+        <!-- Add/Update Section -->
+        <div class="form-container">
+            <input type="text" id="prodId" placeholder="ID">
+            <input type="text" id="prodName" placeholder="Product Name">
+            <input type="text" id="prodCat" placeholder="Category">
+            <input type="number" id="prodQty" placeholder="Quantity">
+            <input type="number" id="prodPrice" placeholder="Price">
+            <button onclick="addOrUpdateProduct()">Add/Update Product</button>
+        </div>
+         <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="inventoryBody">
+                <!-- Data will be injected here -->
+            </tbody>
+        </table>
+    </div>
+<script>
+    // Initial Array of Objects to Store Product Details
+let inventory = [
+    { id: "101", name: "Laptop", category: "Electronics", quantity: 10, price: 800 },
+    { id: "102", name: "Desk Chair", category: "Furniture", quantity: 5, price: 150 }
+];
+
+// Function to Render Table & Update Total Value
+function updateUI(data = inventory) {
+    const tableBody = document.getElementById('inventoryBody');
+    tableBody.innerHTML = '';
+    let totalValue = 0;
+
+    data.forEach((item, index) => {
+        const row = `<tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td class="${item.quantity < 5 ? 'low-stock' : ''}">${item.quantity}</td>
+            <td>$${item.price}</td>
+            <td>
+                <button onclick="adjustStock(${index}, 1)">+</button>
+                <button onclick="adjustStock(${index}, -1)" style="background:#c0392b">-</button>
+            </td>
+        </tr>`;
+        tableBody.innerHTML += row;
+        totalValue += item.quantity * item.price;
+    });
+
+    document.getElementById('totalValue').innerText = `$${totalValue.toFixed(2)}`;
+}
+
+// Check Stock Availability (Search by ID or Name)
+function searchProduct() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = inventory.filter(item => 
+        item.id.toLowerCase().includes(term) || 
+        item.name.toLowerCase().includes(term)
+    );
+    updateUI(filtered);
+}
+
+// Add or Update Inventory
+function addOrUpdateProduct() {
+    const id = document.getElementById('prodId').value;
+    const name = document.getElementById('prodName').value;
+    const cat = document.getElementById('prodCat').value;
+    const qty = parseInt(document.getElementById('prodQty').value);
+    const price = parseFloat(document.getElementById('prodPrice').value);
+
+    if(!id || !name || isNaN(qty)) return alert("Please fill all fields");
+
+    const existingIndex = inventory.findIndex(item => item.id === id);
+
+    if (existingIndex > -1) {
+        // Update existing
+        inventory[existingIndex] = { id, name, category: cat, quantity: qty, price };
+    } else {
+        // Add new
+        inventory.push({ id, name, category: cat, quantity: qty, price });
+    }
+    
+    updateUI();
+    clearInputs();
+}
+
+// Adjust Stock (Add/Remove for Shipments or Sales)
+function adjustStock(index, amount) {
+    if (inventory[index].quantity + amount >= 0) {
+        inventory[index].quantity += amount;
+        updateUI();
+    }
+}
+
+function clearInputs() {
+    ['prodId', 'prodName', 'prodCat', 'prodQty', 'prodPrice'].forEach(id => document.getElementById(id).value = '');
+}
+
+// Initial Load
+updateUI();
+
+</script>
+<br><hr><br>
+<h1>Mini Project 2 : Library Book Management System Requirements </h1>
+<div class="container1">
+        <h1>Library Book Management</h1>
+
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search by title, author, or genre...">
+            <button onclick="searchBooks()">Search</button>
+            <button onclick="displayAvailableBooks()">List Available Books</button>
+            <button onclick="displayAllBooks()">Clear Filter/View All</button>
+        </div>
+
+        <div class="book-list">
+            <h2>Book Records</h2>
+            <table id="bookTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Genre</th>
+                        <th>Status</th>
+                        <th>Borrower</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bookTableBody">
+                    <!-- Book rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        // Requirement 1: Store Book Records in an array of objects
+let books = [
+    { id: 1, title: 'The Hitchhiker\'s Guide to the Galaxy', author: 'Douglas Adams', genre: 'Sci-Fi', isAvailable: true, borrower: null },
+    { id: 2, title: 'Pride and Prejudice', author: 'Jane Austen', genre: 'Classic', isAvailable: true, borrower: null },
+    { id: 3, title: '1984', author: 'George Orwell', genre: 'Dystopian', isAvailable: false, borrower: 'Alice' },
+    { id: 4, title: 'To Kill a Mockingbird', author: 'Harper Lee', genre: 'Fiction', isAvailable: true, borrower: null },
+    { id: 5, title: 'The Great Gatsby', author: 'F. Scott Fitzgerald', genre: 'Classic', isAvailable: false, borrower: 'Bob' }
+];
+
+const bookTableBody = document.getElementById('bookTableBody');
+
+// Function to render books to the table
+function renderBooks(bookList) {
+    bookTableBody.innerHTML = ''; // Clear existing rows
+    bookList.forEach(book => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${book.id}</td>
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>${book.genre}</td>
+            <td class="${book.isAvailable ? 'status-available' : 'status-borrowed'}">
+                ${book.isAvailable ? 'Available' : 'Borrowed'}
+            </td>
+            <td>${book.borrower || 'N/A'}</td>
+            <td>
+                ${book.isAvailable 
+                    ? `<button class="action-btn borrow-btn" onclick="toggleStatus(${book.id}, true)">Borrow</button>` 
+                    : `<button class="action-btn return-btn" onclick="toggleStatus(${book.id}, false)">Return</button>`
+                }
+            </td>
+        `;
+        bookTableBody.appendChild(row);
+    });
+}
+
+// Requirement 2: Search Books by title, author, or genre
+function searchBooks() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredBooks = books.filter(book => 
+        book.title.toLowerCase().includes(searchTerm) ||
+        book.author.toLowerCase().includes(searchTerm) ||
+        book.genre.toLowerCase().includes(searchTerm)
+    );
+    renderBooks(filteredBooks);
+}
+
+// Requirement 3: Track Borrowed Books (Update book status)
+function toggleStatus(bookId, isCurrentlyAvailable) {
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+
+    if (isCurrentlyAvailable) {
+        // Borrow action
+        const borrowerName = prompt("Enter borrower's name:");
+        if (borrowerName && borrowerName.trim() !== '') {
+            book.isAvailable = false;
+            book.borrower = borrowerName.trim();
+            displayAllBooks(); // Re-render the list after change
+        } else {
+            alert("Borrower name is required.");
+        }
+    } else {
+        // Return action
+        if (confirm(`Are you sure you want to return "${book.title}"?`)) {
+            book.isAvailable = true;
+            book.borrower = null;
+            displayAllBooks(); // Re-render the list after change
+        }
+    }
+}
+
+// Requirement 4: List Available Books (Filter)
+function displayAvailableBooks() {
+    const availableBooks = books.filter(book => book.isAvailable);
+    renderBooks(availableBooks);
+}
+
+// Function to display all books (utility)
+function displayAllBooks() {
+    document.getElementById('searchInput').value = ''; // Clear search input when viewing all
+    renderBooks(books);
+}
+
+// Initial render on page load
+document.addEventListener('DOMContentLoaded', displayAllBooks);
+
+    </script>
+    <br><hr><br>
+    <h1>Mini project 3: Student Marks Database </h1>
+    <div class="container3">
+        <h1>Student Marks Database</h1>
+        
+        <!-- Input Form -->
+        <div class="form-container">
+            <h2>Add Student Marks</h2>
+            <form id="marksForm">
+                <input type="text" id="studentName" placeholder="Student Name" required>
+                <input type="number" id="marksSub1" placeholder="Subject 1 Marks (out of 100)" min="0" max="100" required>
+                <input type="number" id="marksSub2" placeholder="Subject 2 Marks (out of 100)" min="0" max="100" required>
+                <input type="number" id="marksSub3" placeholder="Subject 3 Marks (out of 100)" min="0" max="100" required>
+                <button type="submit">Add Record</button>
+            </form>
+        </div>
+
+        <!-- Student Data Table -->
+        <div class="table-container">
+            <h2>Student Records</h2>
+            <table id="marksTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sub 1</th>
+                        <th>Sub 2</th>
+                        <th>Sub 3</th>
+                        <th>Total</th>
+                        <th>Average (%)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Student records will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const marksForm = document.getElementById('marksForm');
+    const tableBody = document.getElementById('tableBody');
+    let students = JSON.parse(localStorage.getItem('students')) || [];
+
+    // Function to render the student records table
+    function renderTable() {
+        tableBody.innerHTML = '';
+        students.forEach((student, index) => {
+            const row = document.createElement('tr');
+            const average = student.total / 3;
+            const status = average >= 33 ? 'Pass' : 'Fail'; // Simple pass/fail logic
+            const statusClass = average >= 33 ? 'pass' : 'fail';
+
+            row.innerHTML = `
+                <td>${student.name}</td>
+                <td>${student.sub1}</td>
+                <td>${student.sub2}</td>
+                <td>${student.sub3}</td>
+                <td>${student.total}</td>
+                <td>${average.toFixed(2)}</td>
+                <td class="${statusClass}">${status}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Function to handle form submission
+    marksForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('studentName').value;
+        const sub1 = parseInt(document.getElementById('marksSub1').value);
+        const sub2 = parseInt(document.getElementById('marksSub2').value);
+        const sub3 = parseInt(document.getElementById('marksSub3').value);
+
+        // Calculate total marks
+        const total = sub1 + sub2 + sub3; 
+
+        const newStudent = {
+            name,
+            sub1,
+            sub2,
+            sub3,
+            total
+        };
+
+        students.push(newStudent);
+        localStorage.setItem('students', JSON.stringify(students)); // Store in localStorage
+        renderTable();
+        marksForm.reset(); // Clear the form
+    });
+
+    // Initial render when the page loads
+    renderTable();
+});
+
+    </script>
+<br><hr><br>
+<h1>Mini project 4: Requirements for Customer Orders Management</h1>
+<div class="container4">
+        <h1>Customer Orders Management</h1>
+
+        <!-- Section 1: Add Order -->
+        <section class="card">
+            <h2>Add New Order</h2>
+            <form id="orderForm">
+                <input type="text" id="orderId" placeholder="Order ID" required>
+                <input type="text" id="customerName" placeholder="Customer Name" required>
+                <input type="text" id="orderedItems" placeholder="Ordered Items (comma separated)" required>
+                <input type="number" id="totalAmount" step="0.01" placeholder="Total Amount ($)" required>
+                <button type="submit">Add Order</button>
+            </form>
+        </section>
+
+        <div class="dashboard">
+            <!-- Section 2: Search Order -->
+            <section class="card">
+                <h2>Search/Filter Orders</h2>
+                <input type="text" id="searchInput" placeholder="Search by ID or Name">
+                <button onclick="searchAndFilterOrders()">Search/Filter</button>
+            </section>
+
+            <!-- Section 3: Calculate Revenue -->
+            <section class="card">
+                <h2>Total Revenue</h2>
+                <p id="revenueDisplay">$0.00</p>
+                <button onclick="calculateTotalRevenue()">Update Revenue</button>
+            </section>
+        </div>
+
+        <!-- Section 4: Order List Display -->
+        <section class="card">
+            <h2>Order List</h2>
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer Name</th>
+                        <th>Items</th>
+                        <th>Amount ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="orderListBody">
+                    <!-- Orders will be dynamically inserted here -->
+                </tbody>
+            </table>
+            <p id="noOrdersMsg" style="display: none;">No orders found matching your criteria.</p>
+        </section>
+    </div>
+    <script>
+        // 1. Store Order Details: Maintain order details in an array of objects.
+let orders1 = [
+    // Initial dummy data
+    { orderId: 'ORD001', customerName: 'Alice Smith', orderedItems: ['Laptop', 'Mouse'], totalAmount: 1200.00 },
+    { orderId: 'ORD002', customerName: 'Bob Johnson', orderedItems: ['Monitor'], totalAmount: 300.50 },
+    { orderId: 'ORD003', customerName: 'Alice Smith', orderedItems: ['Keyboard', 'USB Cable'], totalAmount: 75.25 }
+];
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    displayOrders(orders1); // Display initial orders on load
+});
+
+// Function to handle the Add Order form submission
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const orderId = document.getElementById('orderId').value;
+    const customerName = document.getElementById('customerName').value;
+    const itemsInput = document.getElementById('orderedItems').value;
+    const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+    const orderedItems = itemsInput.split(',').map(item => item.trim());
+
+    const newOrder = {
+        orderId,
+        customerName,
+        orderedItems,
+        totalAmount
+    };
+
+    orders1.push(newOrder);
+    displayOrders(orders); // Update the displayed list
+    this.reset(); // Clear the form
+});
+
+// Helper function to display orders in the table
+function displayOrders(ordersArray) {
+    const tbody = document.getElementById('orderListBody');
+    const noOrdersMsg = document.getElementById('noOrdersMsg');
+    tbody.innerHTML = ''; // Clear existing rows
+
+    if (ordersArray.length === 0) {
+        noOrdersMsg.style.display = 'block';
+        return;
+    } else {
+        noOrdersMsg.style.display = 'none';
+    }
+
+    ordersArray.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${order.orderId}</td>
+            <td>${order.customerName}</td>
+            <td>${order.orderedItems.join(', ')}</td>
+            <td>${order.totalAmount.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// 2. Retrieve Specific Order & 4. Filter Orders by Customer
+function searchAndFilterOrders() {
+    const searchValue = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchValue === '') {
+        displayOrders(orders1); // Show all if search is empty
+        return;
+    }
+
+    // Filters orders by ID (Requirement 2) or Customer Name (Requirement 4)
+    const filteredOrders = orders1.filter(order =>
+        order.orderId.toLowerCase().includes(searchValue) ||
+        order.customerName.toLowerCase().includes(searchValue)
+    );
+
+    displayOrders(filteredOrders);
+}
+
+// 3. Calculate Total Revenue: Sum up all order totals.
+function calculateTotalRevenue() {
+    const totalRevenue = orders1.reduce((sum, order) => sum + order.totalAmount, 0);
+    document.getElementById('revenueDisplay').textContent = `$${totalRevenue.toFixed(2)}`;
+}
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 5: Student Performance Dashboard</h1>
+    <div class="container5">
+        <h1>Student Performance Dashboard</h1>
+
+        <div class="form-container">
+            <h2>Add Student</h2>
+            <form id="studentForm">
+                <input type="text" id="name" placeholder="Student Name" required>
+                <input type="text" id="rollNo" placeholder="Roll Number" required>
+                <input type="number" id="math" placeholder="Math Marks" min="0" max="100" required>
+                <input type="number" id="science" placeholder="Science Marks" min="0" max="100" required>
+                <input type="number" id="history" placeholder="History Marks" min="0" max="100" required>
+                <button type="submit">Add Student</button>
+            </form>
+        </div>
+
+        <div class="dashboard-container">
+            <h2>Performance Data</h2>
+            <button id="sortButton">Sort by Performance</button>
+            <table id="performanceTable">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Math</th>
+                        <th>Science</th>
+                        <th>History</th>
+                        <th>Total</th>
+                        <th>Average (%)</th>
+                        <th>Status</th>
+                        <th>Distinction</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Student data will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const studentForm = document.getElementById('studentForm');
+    const studentTableBody = document.getElementById('studentTableBody');
+    const sortButton = document.getElementById('sortButton');
+    let students = [];
+    const passingAverage = 60; // Pass mark set to 60%
+
+    // Function to calculate total, average, and status
+    function calculatePerformance(student) {
+        student.total = student.math + student.science + student.history;
+        student.average = (student.total / 3).toFixed(2);
+        student.status = student.average >= passingAverage ? 'Pass' : 'Fail';
+        student.distinction = student.average >= 85 ? '⭐' : ''; // Distinction for 85% and above
+    }
+
+    // Function to render the student table
+    function renderTable() {
+        studentTableBody.innerHTML = '';
+        students.forEach(student => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${student.rollNo}</td>
+                <td>${student.name}</td>
+                <td>${student.math}</td>
+                <td>${student.science}</td>
+                <td>${student.history}</td>
+                <td>${student.total}</td>
+                <td>${student.average}%</td>
+                <td class="${student.status.toLowerCase()}">${student.status}</td>
+                <td class="distinction">${student.distinction}</td>
+            `;
+            studentTableBody.appendChild(row);
+        });
+    }
+
+    // Handle form submission
+    studentForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const newStudent = {
+            name: document.getElementById('name').value,
+            rollNo: document.getElementById('rollNo').value,
+            math: parseInt(document.getElementById('math').value),
+            science: parseInt(document.getElementById('science').value),
+            history: parseInt(document.getElementById('history').value),
+        };
+
+        calculatePerformance(newStudent);
+        students.push(newStudent);
+        renderTable();
+        studentForm.reset();
+    });
+
+    // Handle sorting by performance (average)
+    sortButton.addEventListener('click', () => {
+        students.sort((a, b) => b.average - a.average); // Sort in descending order
+        renderTable();
+    });
+
+    // Initial render (if any initial data)
+    renderTable();
+});
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 6: Online Order Fulfillment System </h1>
+    <div class="container6">
+        <h1>Online Order Fulfillment</h1>
+        
+        <!-- Order Entry Form -->
+        <div class="card">
+            <h3>Create New Order</h3>
+            <form id="orderForm">
+                <input type="text" id="customerName" placeholder="Customer Name" required>
+                <input type="text" id="itemList" placeholder="Items (e.g. Laptop, Mouse)" required>
+                <input type="number" id="quantity" placeholder="Quantity" min="1" required>
+                <button type="submit">Add Order</button>
+            </form>
+        </div>
+
+        <!-- Order Display Table -->
+        <div class="card">
+            <h3>Order Dashboard</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Items</th>
+                        <th>Qty</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="orderTableBody">
+                    <!-- Orders will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        let orders = [
+    { id: 101, customer: "Alice Smith", items: "Monitor", qty: 2, status: "pending" },
+    { id: 102, customer: "Bob Jones", items: "Keyboard", qty: 1, status: "fulfilled" }
+];
+
+const orderForm = document.getElementById('orderForm');
+const orderTableBody = document.getElementById('orderTableBody');
+
+// Function to render orders to the table
+function renderOrders() {
+    orderTableBody.innerHTML = '';
+    orders.forEach(order => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>#${order.id}</td>
+            <td>${order.customer}</td>
+            <td>${order.items}</td>
+            <td>${order.qty}</td>
+            <td><span class="status-${order.status}">${order.status.toUpperCase()}</span></td>
+            <td>
+                ${order.status === 'pending' ? 
+                `<button class="btn-fulfill" onclick="fulfillOrder(${order.id})">Mark Fulfilled</button>` : 
+                '✅'}
+            </td>
+        `;
+        orderTableBody.appendChild(row);
+    });
+}
+
+// Function to add a new order
+orderForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const newOrder = {
+        id: Math.floor(Math.random() * 900) + 100, // Random 3-digit ID
+        customer: document.getElementById('customerName').value,
+        items: document.getElementById('itemList').value,
+        qty: document.getElementById('quantity').value,
+        status: "pending"
+    };
+    orders.push(newOrder);
+    orderForm.reset();
+    renderOrders();
+});
+
+// Function to update status to fulfilled
+function fulfillOrder(orderId) {
+    const orderIndex = orders.findIndex(o => o.id === orderId);
+    if (orderIndex !== -1) {
+        orders[orderIndex].status = 'fulfilled';
+        renderOrders();
+    }
+}
+
+// Initial Load
+renderOrders();
+
+    </script>
+    <br><hr><br>
+</body>
+</html>

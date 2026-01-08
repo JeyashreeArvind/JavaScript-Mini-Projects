@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects - Day11</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+        .stopwatch { font-size: 48px; margin-bottom: 20px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 5px; cursor: pointer; }
+        body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.note-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+#note-text {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.notes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.note {
+    padding: 15px;
+    background-color: #e9ecef;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    padding: 5px 10px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+div { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 50%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+
+    </style>
+</head>
+<body>
+<h1>Mini Project 1: Stopwatch with SessionStorage  </h1>
+<div class="stopwatch">00:00:00</div>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+    <button id="resetButton">Reset</button> 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const stopwatchDisplay = document.querySelector('.stopwatch');
+    const startButton = document.getElementById('startButton');
+    const stopButton = document.getElementById('stopButton');
+    const resetButton = document.getElementById('resetButton');
+
+    let intervalId = null;
+    let running = false;
+    let startTime = 0;
+    let elapsedTime = 0;
+
+    const STORAGE_KEY_START_TIME = 'stopwatchStartTime';
+    const STORAGE_KEY_RUNNING = 'stopwatchRunning';
+
+    function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        const milliseconds = Math.floor((ms % 1000) / 10); // get centiseconds
+
+        return (
+            String(minutes).padStart(2, '0') + ':' +
+            String(seconds).padStart(2, '0') + ':' +
+            String(milliseconds).padStart(2, '0')
+        );
+    }
+
+    function updateDisplay() {
+        const now = Date.now();
+        elapsedTime = now - startTime;
+        stopwatchDisplay.textContent = formatTime(elapsedTime);
+    }
+
+    function startTimer() {
+        if (!running) {
+            // Check if timer was running previously on page load
+            const storedRunning = sessionStorage.getItem(STORAGE_KEY_RUNNING) === 'true';
+            
+            if (storedRunning && sessionStorage.getItem(STORAGE_KEY_START_TIME)) {
+                // If it was running, calculate elapsed time based on stored start time
+                startTime = parseInt(sessionStorage.getItem(STORAGE_KEY_START_TIME), 10);
+            } else {
+                // Otherwise, start from current time
+                startTime = Date.now();
+                sessionStorage.setItem(STORAGE_KEY_START_TIME, startTime);
+            }
+            
+            running = true;
+            sessionStorage.setItem(STORAGE_KEY_RUNNING, 'true');
+            intervalId = setInterval(updateDisplay, 10); // Update every 10ms
+        }
+    }
+
+    function stopTimer() {
+        if (running) {
+            clearInterval(intervalId);
+            running = false;
+            sessionStorage.setItem(STORAGE_KEY_RUNNING, 'false');
+            // Store elapsed time so if they start again later, it continues from where it stopped
+            // (although the current implementation relies solely on startTime for running state)
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(intervalId);
+        running = false;
+        startTime = 0;
+        elapsedTime = 0;
+        stopwatchDisplay.textContent = '00:00:00';
+        sessionStorage.removeItem(STORAGE_KEY_START_TIME);
+        sessionStorage.removeItem(STORAGE_KEY_RUNNING);
+    }
+
+    // Event Listeners
+    startButton.addEventListener('click', startTimer);
+    stopButton.addEventListener('click', stopTimer);
+    resetButton.addEventListener('click', resetTimer);
+
+    // Initialize on page load: if it was running previously, restart the timer function
+    if (sessionStorage.getItem(STORAGE_KEY_RUNNING) === 'true' && sessionStorage.getItem(STORAGE_KEY_START_TIME)) {
+        startTimer();
+    }
+});
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 2: Notes App with LocalStorage</h1>
+    <div class="container">
+        <h1>My Notes App</h1>
+        <div class="note-input">
+            <textarea id="note-text" placeholder="Write your note here..." rows="4"></textarea>
+            <button onclick="addNote()">Add Note</button>
+        </div>
+        <div class="notes-container" id="notes-container">
+            <!-- Notes will be loaded here by JavaScript -->
+        </div>
+    </div>
+    <script>
+        // Function to get notes from localStorage
+function getNotes() {
+    const notes = localStorage.getItem('notes');
+    return notes ? JSON.parse(notes) : [];
+}
+
+// Function to save notes to localStorage
+function saveNotes(notes) {
+    localStorage.setItem('notes', JSON.stringify(notes));
+}
+
+// Function to display all notes
+function displayNotes() {
+    const notesContainer = document.getElementById('notes-container');
+    notesContainer.innerHTML = ''; // Clear existing notes
+    const notes = getNotes();
+
+    notes.forEach((noteText, index) => {
+        const noteDiv = document.createElement('div');
+        noteDiv.classList.add('note');
+        noteDiv.innerHTML = `
+            <span>${noteText}</span>
+            <button class="delete-btn" onclick="deleteNote(${index})">Delete</button>
+        `;
+        notesContainer.appendChild(noteDiv);
+    });
+}
+
+// Function to add a new note
+function addNote() {
+    const noteInput = document.getElementById('note-text');
+    const newNoteText = noteInput.value.trim();
+
+    if (newNoteText !== '') {
+        const notes = getNotes();
+        notes.push(newNoteText);
+        saveNotes(notes);
+        noteInput.value = ''; // Clear input field
+        displayNotes(); // Refresh display
+    }
+}
+
+// Function to delete a note by its index
+function deleteNote(index) {
+    const notes = getNotes();
+    notes.splice(index, 1); // Remove the note at the specified index
+    saveNotes(notes);
+    displayNotes(); // Refresh display
+}
+
+// Initial display of notes when the page loads
+document.addEventListener('DOMContentLoaded', displayNotes);
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 3: To-Do List with Persistent Storage</h1>
+    <div class="container">
+        <h1>Persistent To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Add a new task...">
+        <button onclick="addTask()">Add Task</button>
+        <ul id="taskList">
+            <!-- Tasks will be injected here by JavaScript -->
+        </ul>
+    </div>
+    <script>
+        // Key for localStorage
+const STORAGE_KEY = 'todoTasks';
+
+// Function to get tasks from localStorage
+function getTasks() {
+    const tasksJson = localStorage.getItem(STORAGE_KEY);
+    // Parse JSON string back into a JavaScript array, or return an empty array if null
+    return tasksJson ? JSON.parse(tasksJson) : [];
+}
+
+// Function to save tasks to localStorage
+function saveTasks(tasks) {
+    // Stringify the JavaScript array into a JSON string before saving
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// Function to render tasks to the UI
+function renderTasks() {
+    const taskList = document.getElementById('taskList');
+    taskList.innerHTML = ''; // Clear existing list
+    const tasks = getTasks();
+
+    tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = task.completed ? 'completed' : '';
+
+        const span = document.createElement('span');
+        span.textContent = task.text;
+        // Mark complete on click
+        span.onclick = () => toggleComplete(index);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.className = 'delete-btn';
+        // Delete task on click
+        deleteBtn.onclick = () => deleteTask(index);
+
+        li.appendChild(span);
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
+    });
+}
+
+// Function to add a new task
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const taskText = taskInput.value.trim();
+
+    if (taskText !== '') {
+        const tasks = getTasks();
+        tasks.push({ text: taskText, completed: false });
+        saveTasks(tasks);
+        renderTasks();
+        taskInput.value = ''; // Clear input field
+    }
+}
+
+// Function to toggle task completion status
+function toggleComplete(index) {
+    const tasks = getTasks();
+    tasks[index].completed = !tasks[index].completed;
+    saveTasks(tasks);
+    renderTasks();
+}
+
+// Function to delete a task
+function deleteTask(index) {
+    const tasks = getTasks();
+    tasks.splice(index, 1); // Remove task at the specified index
+    saveTasks(tasks);
+    renderTasks();
+}
+
+// Initial render when the page loads
+document.addEventListener('DOMContentLoaded', renderTasks);
+
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 4: Persistent Survey Form</h1>
+    <h1>Survey Form</h1>
+    <form id="surveyForm">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+        </div>
+        <div>
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age"><br><br>
+        </div>
+        <div>
+            <label for="rating">Rating (1-5):</label>
+            <select id="rating" name="rating">
+                <option value="">Select a rating</option>
+                <option value="1">1 (Poor)</option>
+                <option value="2">2 (Fair)</option>
+                <option value="3">3 (Good)</option>
+                <option value="4">4 (Very Good)</option>
+                <option value="5">5 (Excellent)</option>
+            </select>
+        </div>
+        <div>
+            <label for="comments">Comments:</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+        </div>
+        <button type="submit">Submit and Save</button>
+        <button type="button" id="clearButton">Clear Local Storage</button>
+    </form>
+
+    <script>
+        // Get the form and its elements
+        const surveyForm = document.getElementById('surveyForm');
+        const nameInput = document.getElementById('name');
+        const ageInput = document.getElementById('age');
+        const ratingInput = document.getElementById('rating');
+        const commentsInput = document.getElementById('comments');
+        const clearButton = document.getElementById('clearButton');
+
+        // Function to save form data to localStorage
+        function saveFormData() {
+            const formData = {
+                name: nameInput.value,
+                age: ageInput.value,
+                rating: ratingInput.value,
+                comments: commentsInput.value
+            };
+            // Use JSON.stringify to store the object as a string
+            localStorage.setItem('surveyFormData', JSON.stringify(formData));
+        }
+
+        // Function to load form data from localStorage and pre-fill the form
+        function loadFormData() {
+            // Get the data string from localStorage
+            const savedData = localStorage.getItem('surveyFormData');
+            if (savedData) {
+                // Parse the string back into a JavaScript object
+                const formData = JSON.parse(savedData);
+                nameInput.value = formData.name || '';
+                ageInput.value = formData.age || '';
+                ratingInput.value = formData.rating || '';
+                commentsInput.value = formData.comments || '';
+                console.log('Form data loaded from localStorage.');
+            }
+        }
+
+        // Function to clear localStorage and reset the form
+        function clearFormData() {
+            localStorage.removeItem('surveyFormData');
+            surveyForm.reset();
+            console.log('localStorage cleared and form reset.');
+        }
+
+        // --- Event Listeners ---
+
+        // 1. Load data when the page loads
+        document.addEventListener('DOMContentLoaded', loadFormData);
+
+        // 2. Save data as the user types/changes fields (optional, but good for persistence)
+        surveyForm.addEventListener('input', saveFormData);
+
+        // 3. Handle form submission (can still save data on submit)
+        surveyForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            saveFormData(); // Ensure the latest data is saved
+            alert('Form submitted (locally) and data saved to localStorage!');
+        });
+
+        // 4. Clear data with a button click
+        clearButton.addEventListener('click', clearFormData);
+
+    </script>
+    <br><hr><br>
+    <h1>Mini project 5 : Add to Cart with Search Functionality Using</h1>
+    <div class="container">
+        <div class="products-section">
+            <h2>Products</h2>
+            <input type="text" id="searchInput" placeholder="Search products...">
+            <div id="productList" class="product-list">
+                <!-- Product items will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div class="cart-section">
+            <h2>Shopping Cart</h2>
+            <ul id="cartItems" class="cart-items">
+                <!-- Cart items will be dynamically inserted here -->
+            </ul>
+            <div class="cart-total">
+                <strong>Total: $<span id="cartTotal">0.00</span></strong>
+            </div>
+            <button onclick="clearCart()">Clear Cart</button>
+        </div>
+    </div>
+
+    <script>
+const products = [
+    { id: 1, name: "Laptop", price: 999.99 },
+    { id: 2, name: "Smartphone", price: 499.50 },
+    { id: 3, name: "Headphones", price: 89.00 },
+    { id: 4, name: "Keyboard", price: 45.25 },
+    { id: 5, name: "Mouse", price: 25.00 }
+];
+
+let cart = JSON.parse(localStorage.getItem('shoppingCart')) || {};
+
+// Function to render the product list based on search term
+function renderProducts(searchTerm = '') {
+    const productListEl = document.getElementById('productList');
+    productListEl.innerHTML = ''; // Clear existing products
+
+    const filteredProducts = products.filter(product => 
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    filteredProducts.forEach(product => {
+        const productEl = document.createElement('div');
+        productEl.classList.add('product-item');
+        productEl.innerHTML = `
+            <h3>${product.name}</h3>
+            <p>$${product.price.toFixed(2)}</p>
+            <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+        productListEl.appendChild(productEl);
+    });
+}
+
+// Function to add an item to the cart
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (product) {
+        if (cart[productId]) {
+            cart[productId].quantity++;
+        } else {
+            cart[productId] = { ...product, quantity: 1 };
+        }
+        updateCart();
+    }
+}
+
+// Function to remove an item from the cart
+function removeFromCart(productId) {
+    if (cart[productId]) {
+        delete cart[productId];
+        updateCart();
+    }
+}
+
+// Function to update the cart UI and localStorage
+function updateCart() {
+    const cartItemsEl = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    cartItemsEl.innerHTML = '';
+    let total = 0;
+
+    // Iterate over cart items
+    for (const productId in cart) {
+        const item = cart[productId];
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+
+        const li = document.createElement('li');
+        li.classList.add('cart-item');
+        li.innerHTML = `
+            ${item.name} (${item.quantity}) - $${itemTotal.toFixed(2)}
+            <button onclick="removeFromCart(${productId})">Remove</button>
+        `;
+        cartItemsEl.appendChild(li);
+    }
+
+    cartTotalEl.textContent = total.toFixed(2);
+
+    // Persist cart data to localStorage
+    localStorage.setItem('shoppingCart', JSON.stringify(cart));
+}
+
+// Function to clear the entire cart
+function clearCart() {
+    cart = {};
+    updateCart();
+}
+
+// Search functionality listener
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    renderProducts(e.target.value);
+});
+
+// Initial render calls
+document.addEventListener('DOMContentLoaded', () => {
+    renderProducts();
+    updateCart(); // Load cart from localStorage on page load
+});
+</script>
+<br><hr><br>
+<h1>Mini Project 6 : Expense Tracker with LocalStorage </h1>
+<div class="container">
+        <h1>Expense Tracker</h1>
+        <form id="expense-form">
+            <div class="form-group">
+                <label for="expense-name">Expense Name:</label>
+                <input type="text" id="expense-name" required>
+            </div>
+            <div class="form-group">
+                <label for="expense-amount">Amount ($):</label>
+                <input type="number" id="expense-amount" required min="0" step="0.01">
+            </div>
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <h2>My Expenses</h2>
+        <ul id="expense-list">
+            <!-- Expenses will be dynamically added here -->
+        </ul>
+
+        <h2>Total Expenses: $<span id="total-expenses">0.00</span></h2>
+    </div>
+
+    <script>
+        // JavaScript logic starts here
+        document.addEventListener('DOMContentLoaded', () => {
+            const expenseForm = document.getElementById('expense-form');
+            const expenseNameInput = document.getElementById('expense-name');
+            const expenseAmountInput = document.getElementById('expense-amount');
+            const expenseList = document.getElementById('expense-list');
+            const totalExpensesSpan = document.getElementById('total-expenses');
+
+            let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+            function renderExpenses() {
+                // Clear the current list
+                expenseList.innerHTML = '';
+                let total = 0;
+
+                expenses.forEach((expense, index) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${expense.name}</span>
+                        <span>$${expense.amount.toFixed(2)}</span>
+                        <button class="delete-btn" onclick="removeExpense(${index})">Remove</button>
+                    `;
+                    expenseList.appendChild(li);
+                    total += expense.amount;
+                });
+
+                totalExpensesSpan.textContent = total.toFixed(2);
+            }
+
+            function addExpense(e) {
+                e.preventDefault();
+                const name = expenseNameInput.value;
+                const amount = parseFloat(expenseAmountInput.value);
+
+                if (name && amount > 0) {
+                    const newExpense = { name, amount };
+                    expenses.push(newExpense);
+                    saveExpenses();
+                    expenseNameInput.value = '';
+                    expenseAmountInput.value = '';
+                }
+            }
+
+            function saveExpenses() {
+                localStorage.setItem('expenses', JSON.stringify(expenses));
+                renderExpenses();
+            }
+
+            // Make the remove function globally accessible for the onclick HTML attribute
+            window.removeExpense = function(index) {
+                expenses.splice(index, 1);
+                saveExpenses();
+            }
+
+            // Event listener for form submission
+            expenseForm.addEventListener('submit', addExpense);
+
+            // Initial render when the page loads
+            renderExpenses();
+        });
+    </script>
+    <br><hr><br>
+</body>
+</html>

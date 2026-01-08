@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects - Day 9</title>
+    <style>
+        /* Define CSS variables for themes */
+:root {
+    --bg-color: #ffffff; /* Default light background */
+    --text-color: #000000; /* Default light text */
+    --button-bg: #f0f0f0;
+    --button-text: #000000;
+}
+
+/* Dark mode specific variables (Requirement 3) */
+body.dark-mode {
+    --bg-color: #121212; /* Dark background */
+    --text-color: #ffffff; /* White text */
+    --button-bg: #555;
+    --button-text: #ffffff;
+}
+
+/* Apply variables to the body and general elements */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+    font-family: sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+.search-container {
+  font-family: Arial, sans-serif;
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#itemList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#itemList li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Hidden state for filtered items */
+.hidden {
+  display: none;
+}
+
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.stopwatch-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin-top: 50px;
+}
+
+#display {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+}
+
+#startBtn { background-color: #28a745; color: white; }
+#stopBtn { background-color: #dc3545; color: white; }
+#resetBtn { background-color: #6c757d; color: white; }
+/* Base Styles */
+body {
+    font-family: sans-serif;
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header, main, footer {
+    padding: 20px;
+}
+
+/* Theme Definitions */
+
+/* Blue Theme (Default) */
+.theme-blue {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.theme-blue .theme-btn {
+    background-color: #00796b;
+    color: white;
+}
+
+/* Green Theme */
+.theme-green {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.theme-green .theme-btn {
+    background-color: #388e3c;
+    color: white;
+}
+
+/* Yellow Theme */
+.theme-yellow {
+    background-color: #fffde7;
+    color: #fbc02d;
+}
+
+.theme-yellow .theme-btn {
+    background-color: #fbc02d;
+    color: black;
+}
+
+/* Dark Theme */
+.theme-dark {
+    background-color: #263238;
+    color: #cfd8dc;
+}
+
+.theme-dark .theme-btn {
+    background-color: #546e7a;
+    color: white;
+}
+
+
+/* Button Styling */
+.theme-buttons {
+    margin-top: 10px;
+}
+
+.theme-btn {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.theme-btn:hover {
+    opacity: 0.8;
+}
+li.completed {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 350px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 70%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+textarea { width: 100%; height: 200px; padding: 10px; font-size: 16px; box-sizing: border-box; }
+        #count-display { margin-top: 10px; font-size: 18px; font-weight: bold; }
+
+    </style>
+</head>
+<body>
+<h1>Mini Project 1 : Light/Dark Mode Toggle  </h1> 
+<header>
+        <h1>Light/Dark Mode Toggle Example</h1>
+        <button id="theme-toggle">Switch to Dark Mode</button>
+    </header>
+    <main>
+        <p>This is some example text to show the theme change.</p>
+        <p>By default, the page is in light mode. Click the button above to switch modes.</p>
+    </main>
+    <script>
+        // Select the button and the body element
+const themeToggleBtn = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Function to toggle the dark-mode class
+function toggleDarkMode() {
+    body.classList.toggle('dark-mode');
+
+    // Update button text based on current mode
+    if (body.classList.contains('dark-mode')) {
+        themeToggleBtn.textContent = 'Switch to Light Mode';
+    } else {
+        themeToggleBtn.textContent = 'Switch to Dark Mode';
+    }
+}
+
+// Add click event listener to the button
+themeToggleBtn.addEventListener('click', toggleDarkMode);
+
+    </script> 
+<br><hr><br>
+<h1>Mini Project 2 : Stopwatch Timer (Real-World Mini Project)  </h1>
+<div class="stopwatch-container">
+    <h1 id="display">00:00:00</h1>
+    <div class="controls">
+        <button id="startBtn" onclick="start()">Start</button>
+        <button id="stopBtn" onclick="stop()">Stop</button>
+        <button id="resetBtn" onclick="reset()">Reset</button>
+    </div>
+</div>
+<script>
+    let seconds = 0;
+let timer = null;
+
+// Function to format numbers (adds a leading zero if < 10)
+const format = (time) => time < 10 ? `0${time}` : time;
+
+function updateTime() {
+    seconds++;
+    
+    let hrs = Math.floor(seconds / 3600);
+    let mins = Math.floor((seconds - (hrs * 3600)) / 60);
+    let secs = seconds % 60;
+
+    document.getElementById('display').innerText = 
+        `${format(hrs)}:${format(mins)}:${format(secs)}`;
+}
+
+function start() {
+    if (timer) return; // Prevent multiple intervals from running
+    timer = setInterval(updateTime, 1000);
+}
+
+function stop() {
+    clearInterval(timer);
+    timer = null;
+}
+
+function reset() {
+    stop();
+    seconds = 0;
+    document.getElementById('display').innerText = "00:00:00";
+}
+</script>
+<br><hr><br>
+<h1>Mini Project 3: Live Search Filter</h1>
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search for names..." onkeyup="filterList()">
+  
+  <ul id="itemList">
+    <li>Alice Johnson</li>
+    <li>Bob Smith</li>
+    <li>Charlie Davis</li>
+    <li>Diana Prince</li>
+    <li>Ethan Hunt</li>
+    <li>Fiona Gallagher</li>
+  </ul>
+</div>
+<script>
+    function filterList() {
+  // Get the search input value
+  const input = document.getElementById('searchInput');
+  const filter = input.value.toLowerCase();
+  
+  // Get the list and all list items
+  const ul = document.getElementById('itemList');
+  const li = ul.getElementsByTagName('li');
+
+  // Loop through all list items and hide those that don't match
+  for (let i = 0; i < li.length; i++) {
+    const textValue = li[i].textContent || li[i].innerText;
+    
+    if (textValue.toLowerCase().indexOf(filter) > -1) {
+      li[i].style.display = ""; // Show item
+    } else {
+      li[i].style.display = "none"; // Hide item
+    }
+  }
+}
+
+</script>
+<br><hr><br>
+<h1>Mini Project 4: Dynamic Theme Switcher</h1>
+<header>
+        <h1>Dynamic Theme Switcher</h1>
+        <div class="theme-buttons">
+            <button id="blue" class="theme-btn">Blue Theme</button>
+            <button id="green" class="theme-btn">Green Theme</button>
+            <button id="yellow" class="theme-btn">Yellow Theme</button>
+            <button id="dark" class="theme-btn">Dark Theme</button>
+        </div>
+    </header>
+
+    <main>
+        <h2>Welcome!</h2>
+        <p>This page uses JavaScript to change the color scheme dynamically. Select a button above to see the changes instantly applied to the background and text colors.</p>
+        <p>No page reload is necessary!</p>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mini Project 4</p>
+    </footer>
+    <script>
+     document.addEventListener('DOMContentLoaded', () => {
+    // Select the body element
+    const body = document.body;
+
+    // Select all theme buttons
+    const themeButtons = document.querySelectorAll('.theme-btn');
+
+    // Add a click event listener to each button
+    themeButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            // Get the ID of the clicked button (e.g., 'blue', 'green')
+            const selectedTheme = event.target.id;
+
+            // Remove all existing theme classes from the body
+            // This is a simple way to manage multiple themes
+            body.classList.remove('theme-blue', 'theme-green', 'theme-yellow', 'theme-dark');
+
+            // Add the new theme class to the body
+            body.classList.add(`theme-${selectedTheme}`);
+        });
+    });
+});
+
+    </script>
+    <br><hr><br>
+    <h1>Mini project 5:To-Do List App</h1>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Enter a new task...">
+        <button onclick="addTask()">Add</button>
+        <ul id="taskList">
+            <!-- Tasks will be added here dynamically -->
+        </ul>
+    </div>
+    <script>
+     // Function to add a new task
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const taskText = taskInput.value.trim();
+
+    if (taskText === '') {
+        alert('Please enter a task!');
+        return;
+    }
+
+    // Create a new list item (li)
+    const li = document.createElement('li');
+    li.innerHTML = `
+        <span>${taskText}</span>
+        <button class="delete-btn">Delete</button>
+    `;
+
+    // Add event listener to mark task as completed (toggle 'completed' class)
+    li.addEventListener('click', function() {
+        li.classList.toggle('completed');
+    });
+
+    // Add event listener to the delete button
+    const deleteBtn = li.querySelector('.delete-btn');
+    deleteBtn.addEventListener('click', function(event) {
+        event.stopPropagation(); // Prevent the li click listener from firing
+        li.remove();
+    });
+
+    // Append the new task to the list
+    taskList.appendChild(li);
+
+    // Clear the input field
+    taskInput.value = '';
+}
+   
+    </script>
+    <br><hr><br>
+    <h1>Mini Project 6: Word Counter</h1>
+    <h1>Word Counter</h1>
+    <textarea id="text-input" placeholder="Start typing here..."></textarea>
+    <div id="count-display">Word Count: <span>0</span></div>
+    <script>
+        // Select the textarea and the span element for displaying the count
+const textInput = document.getElementById('text-input');
+const countDisplay = document.querySelector('#count-display span');
+
+// Add an event listener for input events (keyboard input, paste, etc.)
+textInput.addEventListener('input', function() {
+    // Get the current value from the textarea
+    const text = textInput.value;
+
+    // --- Word Counting Logic ---
+
+    // 1. Trim leading/trailing whitespace
+    const trimmedText = text.trim();
+
+    // 2. Handle empty input case
+    if (trimmedText === '') {
+        countDisplay.textContent = '0';
+        return;
+    }
+
+    // 3. Split the text by one or more whitespace characters (\s+)
+    // This addresses the requirement to ignore multiple spaces between words.
+    const words = trimmedText.split(/\s+/);
+
+    // 4. Update the display with the number of words
+    countDisplay.textContent = words.length;
+});
+
+    </script>
+</body>
+</html>
