@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects- Day 14</title>
+    <style>
+     
+
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+}
+
+#sentence-display {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #e9e9e9;
+    text-align: left;
+}
+
+#input-box {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 1em;
+    resize: none;
+    box-sizing: border-box;
+}
+
+#start-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+#results {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+}
+   .converter { border: 1px solid #ccc; padding: 20px; border-radius: 8px; box-shadow: 2px 2px 10px #eee; }
+        select, input { margin: 10px 0; padding: 8px; width: 100%; display: block; }
+        #result { font-weight: bold; color: #2c3e50; margin-top: 15px; font-size: 1.2em; } 
+
+
+
+    </style>
+</head>
+<body>
+<h1>Mini Project  1 :  Typing Speed Tester (Fetch API)  </h1>
+   <div class="container">
+        <h1>Typing Speed Test</h1>
+        <p id="sentence-display">Click "Start Test" to fetch a sentence.</p>
+        <textarea id="input-box" rows="5" placeholder="Start typing here..." disabled></textarea>
+        <button id="start-button">Start Test</button>
+        <div id="results">
+            <p>WPM: <span id="wpm">0</span></p>
+            <p>Accuracy: <span id="accuracy">0%</span></p>
+        </div>
+    </div>
+    <script>
+    const sentenceDisplay = document.getElementById('sentence-display');
+const inputBox = document.getElementById('input-box');
+const startButton = document.getElementById('start-button');
+const wpmDisplay = document.getElementById('wpm');
+const accuracyDisplay = document.getElementById('accuracy');
+
+let startTime, endTime;
+let currentSentence = '';
+
+// Function to fetch a random sentence from the Bacon Ipsum API
+async function fetchNewSentence() {
+    try {
+        const response = await fetch("https://baconipsum.com/api/?type=all-meat&paras=1");
+        const data = await response.json();
+        currentSentence = data[0].trim();
+        sentenceDisplay.textContent = currentSentence;
+    } catch (error) {
+        console.error('Error fetching sentence:', error);
+        sentenceDisplay.textContent = 'Failed to load a sentence. Please try again.';
+    }
+}
+
+// Function to start the test
+function startTest() {
+    fetchNewSentence();
+    inputBox.value = '';
+    inputBox.disabled = false;
+    inputBox.focus();
+    startButton.disabled = true;
+    wpmDisplay.textContent = '0';
+    accuracyDisplay.textContent = '0%';
+    startTime = new Date().getTime();
+}
+
+// Function to calculate WPM and accuracy
+function calculateResults() {
+    endTime = new Date().getTime();
+    const timeTakenInMinutes = (endTime - startTime) / 60000; // time in minutes
+    const typedText = inputBox.value.trim();
+    const wordsTyped = typedText.split(' ').length;
+    
+    // Calculate WPM: (Total Characters / 5) / Time in Minutes is also a common formula
+    // Using words typed directly for simplicity here
+    const wpm = Math.round(wordsTyped / timeTakenInMinutes); 
+
+    // Calculate accuracy
+    let correctCharacters = 0;
+    for (let i = 0; i < typedText.length; i++) {
+        if (typedText[i] === currentSentence[i]) {
+            correctCharacters++;
+        }
+    }
+    const accuracy = Math.round((correctCharacters / currentSentence.length) * 100);
+
+    wpmDisplay.textContent = wpm;
+    accuracyDisplay.textContent = `${accuracy}%`;
+    inputBox.disabled = true;
+    startButton.disabled = false;
+    startButton.textContent = 'Start Test Again';
+}
+
+// Event listener for the input box
+inputBox.addEventListener('input', () => {
+    // Check if the user has typed the entire sentence correctly
+    if (inputBox.value.trim() === currentSentence) {
+        calculateResults();
+    }
+});
+
+// Event listener for the start button
+startButton.addEventListener('click', startTest);
+
+// Initialize with a message
+sentenceDisplay.textContent = 'Click "Start Test" to begin.';
+
+    </script> 
+    <h1>Mini Project 2 : Real-Time Air Quality Checker (Fetch API)  </h1>
+    <div class="container">
+        <h1>Air Quality Index (AQI) Checker</h1>
+        <label for="city-select">Choose a city:</label>
+        <select id="city-select">
+            <option value="">--Select a city--</option>
+            <!-- Use coordinates for more reliable results -->
+            <option value="40.7128,-74.0060">New York</option>
+            <option value="34.0522,-118.2437">Los Angeles</option>
+            <option value="51.5074,-0.1278">London</option>
+            <option value="35.6895,139.6917">Tokyo</option>
+        </select>
+        <div id="aqi-data">
+            <h2>Current Air Quality: <span id="aqi-value">N/A</span></h2>
+            <p>Status: <span id="aqi-status">N/A</span></p>
+            <h3>Pollutants:</h3>
+            <ul id="pollutants-list"></ul>
+            <h3>Health Advice:</h3>
+            <p id="health-advice">N/A</p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('city-select').addEventListener('change', function() {
+    const coords = this.value;
+    if (coords) {
+        fetchAirQuality(coords);
+    }
+});
+
+function fetchAirQuality(coords) {
+    const [lat, lon] = coords.split(',');
+    // Replace with your actual API endpoint and key
+    const API_ENDPOINT = `https://api.example.com/v1/current?lat=${lat}&lon=${lon}&key=YOUR_API_KEY`;
+
+    fetch(API_ENDPOINT)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Adjust data parsing according to your API's JSON structure
+            displayAirQuality(data);
+        })
+        .catch(error => {
+            console.error('Error fetching air quality data:', error);
+            document.getElementById('aqi-status').textContent = 'Error fetching data';
+        });
+}
+
+function displayAirQuality(data) {
+    // Example data extraction (adjust for your API)
+    const aqi = data.aqi_value || 'N/A';
+    const status = data.health_status || 'N/A';
+    const advice = data.health_recommendations || 'No specific advice available.';
+    const pollutants = data.pollutants || []; // Array of pollutants
+
+    document.getElementById('aqi-value').textContent = aqi;
+    document.getElementById('aqi-status').textContent = status;
+    document.getElementById('health-advice').textContent = advice;
+
+    const pollutantsList = document.getElementById('pollutants-list');
+    pollutantsList.innerHTML = ''; // Clear previous list
+
+    // Example pollutant list (adjust for your API's format)
+    if (pollutants.length > 0) {
+        pollutants.forEach(p => {
+            const li = document.createElement('li');
+            li.textContent = `${p.code}: ${p.concentration} µg/m³`;
+            pollutantsList.appendChild(li);
+        });
+    } else {
+        pollutantsList.innerHTML = '<li>Details unavailable</li>';
+    }
+}
+
+    </script>
+    <h1>MINI PROJECT 3: GitHub User Finder </h1>
+    <div class="container">
+        <h1>GitHub User Finder</h1>
+        <div class="search-box">
+            <input type="text" id="usernameInput" placeholder="Enter GitHub username">
+            <button id="searchButton">Search</button>
+        </div>
+        <div id="profileContainer" class="profile-card">
+            <!-- Profile data will be injected here by JavaScript -->
+        </div>
+        <div id="errorContainer" class="error-message">
+            <!-- Error messages will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('searchButton').addEventListener('click', () => {
+    const username = document.getElementById('usernameInput').value;
+    if (username) {
+        fetchGitHubUser(username);
+    }
+});
+
+async function fetchGitHubUser(username) {
+    const profileContainer = document.getElementById('profileContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    
+    // Clear previous results and errors
+    profileContainer.innerHTML = '';
+    errorContainer.innerHTML = '';
+
+    const apiUrl = `https://api.github.com{username}`;
+    
+    try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            // Handle specific errors, e.g., 404 User not found
+            if (response.status === 404) {
+                throw new Error('User not found. Please enter a valid GitHub username.');
+            } else {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        }
+
+        const userData = await response.json();
+        displayUserProfile(userData);
+
+    } catch (error) {
+        displayError(error.message);
+    }
+}
+
+function displayUserProfile(user) {
+    const profileContainer = document.getElementById('profileContainer');
+    
+    // Create an HTML structure with the required data
+    profileContainer.innerHTML = `
+        <img src="${user.avatar_url}" alt="Profile Image" class="profile-img">
+        <h2>${user.name || user.login}</h2>
+        <p>${user.bio || 'No bio available'}</p>
+        <div class="stats">
+            <span>Public Repos: ${user.public_repos}</span>
+            <span>Followers: ${user.followers}</span>
+        </div>
+        <a href="${user.html_url}" target="_blank">View Profile on GitHub</a>
+    `;
+}
+
+function displayError(message) {
+    const errorContainer = document.getElementById('errorContainer');
+    errorContainer.innerHTML = `<p>${message}</p>`;
+}
+
+    </script>
+    <h1>MINI PROJECT 4: Currency Converter</h1>
+    <div class="converter">
+    <h2>Currency Converter</h2>
+    <input type="number" id="amount" placeholder="Enter amount" value="1">
+    
+    <label>From:</label>
+    <select id="fromCurrency"></select>
+    
+    <label>To:</label>
+    <select id="toCurrency"></select>
+    
+    <div id="result">Converted Value: --</div>
+</div>
+
+<script>
+    const fromDropDown = document.getElementById("fromCurrency");
+const toDropDown = document.getElementById("toCurrency");
+const amountInput = document.getElementById("amount");
+const resultDisplay = document.getElementById("result");
+
+// Replace 'YOUR_API_KEY' with a free key from https://www.exchangerate-api.com
+const apiKey = 'YOUR_API_KEY'; 
+const apiURL = `https://v6.exchangerate-api.com{apiKey}/latest/USD`;
+
+let currencies = ["USD", "EUR", "GBP", "INR", "JPY", "CAD", "AUD"];
+
+// 1. Populate Dropdowns
+currencies.forEach((currency) => {
+    const option1 = document.createElement("option");
+    const option2 = document.createElement("option");
+    option1.value = option2.value = currency;
+    option1.text = option2.text = currency;
+    fromDropDown.add(option1);
+    toDropDown.add(option2);
+});
+
+// Set default values
+fromDropDown.value = "USD";
+toDropDown.value = "EUR";
+
+// 2. Fetch and Calculate
+async function convertCurrency() {
+    const amount = amountInput.value;
+    const from = fromDropDown.value;
+    const to = toDropDown.value;
+
+    if (amount.length === 0 || amount <= 0) return;
+
+    try {
+        const response = await fetch(`https://v6.exchangerate-api.com{apiKey}/pair/${from}/${to}`);
+        const data = await response.json();
+        
+        const rate = data.conversion_rate;
+        const total = (amount * rate).toFixed(2);
+        
+        resultDisplay.innerHTML = `${amount} ${from} = ${total} ${to}`;
+    } catch (error) {
+        resultDisplay.innerHTML = "Error fetching rates.";
+    }
+}
+
+// 3. Event Listeners for "Instant" updates
+amountInput.addEventListener("input", convertCurrency);
+fromDropDown.addEventListener("change", convertCurrency);
+toDropDown.addEventListener("change", convertCurrency);
+
+// Initial Call
+convertCurrency();
+
+</script>
+<h1>Mini project 5 :Dictionary App   </h1>
+<div class="container">
+        <header>
+            <h1>My Dictionary</h1>
+        </header>
+        <div class="search-box">
+            <input type="text" id="word-input" placeholder="Enter a word...">
+            <button id="search-btn">Search</button>
+        </div>
+        <div id="result-area">
+            <!-- Results will be displayed here dynamically -->
+        </div>
+    </div>
+    <script>
+        const searchBtn = document.getElementById("search-btn");
+const wordInput = document.getElementById("word-input");
+const resultArea = document.getElementById("result-area");
+
+searchBtn.addEventListener("click", () => {
+    const word = wordInput.value.trim();
+    if (word) {
+        fetchDefinition(word);
+    } else {
+        resultArea.innerHTML = "<p>Please enter a word.</p>";
+    }
+});
+
+async function fetchDefinition(word) {
+    resultArea.innerHTML = `<p>Searching for "${word}"...</p>`;
+    try {
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+        if (!response.ok) {
+            throw new Error("Word not found.");
+        }
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        resultArea.innerHTML = `<p>Error: ${error.message} Please try another word.</p>`;
+    }
+}
+
+function displayResults(data) {
+    const entry = data[0];
+    const definitions = entry.meanings.flatMap(meaning =>
+        meaning.definitions.map(def => ({
+            partOfSpeech: meaning.partOfSpeech,
+            definition: def.definition,
+            example: def.example
+        }))
+    );
+
+    let html = `<h2>${entry.word}</h2>`;
+    // Optional: add audio pronunciation
+    if (entry.phonetics && entry.phonetics.length > 0) {
+      const audio = entry.phonetics.find(p => p.audio);
+      if (audio) {
+        html += `<audio controls src="${audio.audio}">Your browser does not support the audio element.</audio>`;
+      }
+    }
+
+    html += '<ul>';
+    definitions.forEach((def, index) => {
+        html += `<li>
+            <strong>${def.partOfSpeech}:</strong> ${def.definition}
+            ${def.example ? `<p class="example"><em>Example: ${def.example}</em></p>` : ''}
+        </li>`;
+    });
+    html += '</ul>';
+
+    resultArea.innerHTML = html;
+}
+
+    </script>
+    <h1>Mini project 6 : NASA Picture of the Day Viewer </h1>
+    <div class="container">
+        <h1>NASA Astronomy Picture of the Day</h1>
+        
+        <div class="controls">
+            <label for="date-input">Select Date:</label>
+            <input type="date" id="date-input">
+            <button id="fetch-btn">View Picture</button>
+        </div>
+
+        <div id="content-loader" class="hidden">Loading...</div>
+
+        <div id="apod-data">
+            <h2 id="title"></h2>
+            <div id="media-container"></div>
+            <p id="description"></p>
+        </div>
+    </div>
+    <script>
+        const apiKey1 = 'DEMO_KEY'; // Replace with your key from api.nasa.gov
+const dateInput = document.getElementById('date-input');
+const fetchBtn = document.getElementById('fetch-btn');
+const contentLoader = document.getElementById('content-loader');
+const mediaContainer = document.getElementById('media-container');
+
+// Set max date to today
+const today = new Date().toISOString().split('T')[0];
+dateInput.max = today;
+dateInput.value = today;
+
+async function fetchAPOD(date) {
+    contentLoader.classList.remove('hidden');
+    const url = `https://api.nasa.gov{apiKey1}&date=${date}`;
+    
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        displayData(data);
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to fetch image. Please try again.");
+    } finally {
+        contentLoader.classList.add('hidden');
+    }
+}
+
+function displayData(data) {
+    document.getElementById('title').textContent = data.title;
+    document.getElementById('description').textContent = data.explanation;
+    mediaContainer.innerHTML = ''; // Clear previous media
+
+    if (data.media_type === 'image') {
+        const img = document.createElement('img');
+        img.src = data.url;
+        img.alt = data.title;
+        mediaContainer.appendChild(img);
+    } else if (data.media_type === 'video') {
+        const iframe = document.createElement('iframe');
+        iframe.src = data.url;
+        iframe.width = "100%";
+        iframe.height = "400px";
+        mediaContainer.appendChild(iframe);
+    }
+}
+
+fetchBtn.addEventListener('click', () => fetchAPOD(dateInput.value));
+
+// Load today's picture on initial startup
+fetchAPOD(today);
+
+    </script>
+</body>
+</html>

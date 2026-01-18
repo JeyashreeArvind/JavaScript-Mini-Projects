@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript MiniProjects- Day 15</title>
+    <style>
+    .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 50%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        button {
+            width: 50%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #status { margin-top: 20px; padding: 10px; border: 1px solid #ccc; white-space: pre-wrap; }
+        .calculator { background: #333; padding: 20px; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+#display { width: 100%; height: 50px; font-size: 24px; text-align: right; margin-bottom: 10px; padding: 10px; box-sizing: border-box; }
+.buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+button { padding: 20px; font-size: 18px; cursor: pointer; border: none; border-radius: 5px; }
+button:hover { background: #ddd; }
+.equals { background: #4CAF50; color: white; grid-row: span 2; }
+.control { background: #ff5722; color: white; }
+.zero { grid-column: span 2; }
+.dashboard-container { max-width: 800px; margin: auto; }
+        .log-entry { padding: 10px; margin-bottom: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 5px; }
+        .log-entry p { margin: 0; }
+        .log-entry .timestamp { font-size: 0.8em; color: #721c24; opacity: 0.7; }
+        #log-display { margin-top: 20px; }
+        .error { color: red; margin-top: 10px; font-weight: bold; }
+        .success { color: green; margin-top: 10px; }
+        input { display: block; margin-bottom: 10px; padding: 8px; width: 250px; }
+        #log-container { border: 1px solid #ccc; padding: 10px; min-height: 200px; background-color: #f9f9f9; }
+        .log-entry { margin-bottom: 8px; padding: 5px; border-radius: 3px; }
+        .log-info { background-color: #e0f7fa; border-left: 4px solid #00bcd4; }
+        .log-warn { background-color: #fff8e1; border-left: 4px solid #ffeb3b; }
+        .log-error { background-color: #ffcdd2; border-left: 4px solid #f44336; }
+        .timestamp { font-size: 0.8em; color: #666; margin-right: 10px; }
+    </style>
+</head>
+<body>
+ <h1>Mini Project 1: User Registration Form with Validation & Error </h1>   
+ <div class="form-container">
+        <h2>Register</h2>
+        <form id="registrationForm" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username">
+                <div id="username-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+                <div id="email-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+                <div id="password-error" class="error-message"></div>
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+    // Custom Error Class for specific validation issues
+class ValidationError extends Error {
+    constructor(message, fieldId) {
+        super(message);
+        this.name = "ValidationError";
+        this.fieldId = fieldId;
+    }
+}
+
+// Function to clear all previous error messages
+function clearErrors() {
+    const errorMessages = document.querySelectorAll('.error-message');
+    errorMessages.forEach(el => el.textContent = '');
+}
+
+// Function to display an error message for a specific field
+function displayError(fieldId, message) {
+    const errorElement = document.getElementById(fieldId + '-error');
+    if (errorElement) {
+        errorElement.textContent = message;
+    }
+}
+
+// Function to validate the form fields
+function validateForm(formData) {
+    clearErrors(); // Clear errors before new validation
+
+    // Check for empty fields
+    if (!formData.username) {
+        throw new ValidationError('Username is required.', 'username');
+    }
+    if (!formData.email) {
+        throw new ValidationError('Email is required.', 'email');
+    }
+    if (!formData.password) {
+        throw new ValidationError('Password is required.', 'password');
+    }
+
+    // Check for valid email format using a simple regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(formData.email)) {
+        throw new ValidationError('Please enter a valid email address.', 'email');
+    }
+}
+
+// Function to handle form submission
+function handleFormSubmit(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const form = document.getElementById('registrationForm');
+    const formData = {
+        username: form.username.value.trim(),
+        email: form.email.value.trim(),
+        password: form.password.value.trim()
+    };
+
+    try {
+        validateForm(formData); // Attempt to validate the data
+        // If validation passes, you can proceed with form submission (e.g., send to server)
+        alert('Form submitted successfully! Check console for data.');
+        console.log('Submitted Data:', formData);
+        form.reset(); // Optionally reset the form after successful submission
+    } catch (error) {
+        // Catch and handle the validation errors
+        if (error instanceof ValidationError) {
+            displayError(error.fieldId, error.message); // Display error below the field
+        } else {
+            // Handle other potential runtime errors
+            console.error('An unexpected error occurred:', error);
+            alert('An unexpected error occurred. Please try again.');
+        }
+    }
+}
+
+    </script>
+    <h1>Mini Project 2. API Response Logger </h1>
+    <h1>API Response Logger</h1>
+    <p>Logs API responses (success/error) to LocalStorage for debugging.</p>
+    <button onclick="fetchData('https://api.github.com')">Fetch Successful API</button>
+    <button onclick="fetchData('https://api.github.com')">Fetch Failing API</button>
+    <button onclick="clearLogs()">Clear Logs</button>
+    <h3>Status:</h3>
+    <div id="status" style="width: 400px;">Ready</div>
+
+    <script>
+        const STORAGE_KEY = 'apiLogs';
+        const statusDiv = document.getElementById('status');
+
+        // Function to log messages to the UI
+        function logStatus(message) {
+            statusDiv.textContent = message;
+        }
+
+        // Function to store logs in LocalStorage
+        function storeLogInLocalStorage(type, data) {
+            let logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            logs.push({
+                timestamp: new Date().toISOString(),
+                type: type,
+                data: data
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+            console.log(`Log stored: ${type}`);
+        }
+
+        // Function to fetch data and log the response
+        async function fetchData(url) {
+            logStatus(`Attempting to fetch from: ${url}`);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    // Handle non-OK responses (e.g., 404 Not Found)
+                    const errorData = await response.json();
+                    const errorMessage = `API Error: ${response.status} ${response.statusText}`;
+                    storeLogInLocalStorage('error', { url: url, status: response.status, statusText: response.statusText, details: errorData });
+                    logStatus(errorMessage);
+                    return;
+                }
+                
+                // Handle successful responses
+                const data = await response.json();
+                storeLogInLocalStorage('success', { url: url, status: response.status, data: data });
+                logStatus(`API Success: ${response.status}. Data logged.`);
+
+            } catch (error) {
+                // Catches network errors (e.g., CORS issues, no internet)
+                storeLogInLocalStorage('network-error', { url: url, message: error.message });
+                logStatus(`Network Error: ${error.message}`);
+            }
+        }
+
+        // Function to clear LocalStorage
+        function clearLogs() {
+            localStorage.removeItem(STORAGE_KEY);
+            logStatus('Logs cleared from LocalStorage.');
+            console.clear();
+        }
+
+        // Initial log of current logs in storage when the page loads
+        window.onload = () => {
+            const currentLogs = localStorage.getItem(STORAGE_KEY);
+            if (currentLogs) {
+                console.log('Current stored logs:', JSON.parse(currentLogs));
+            } else {
+                console.log('No logs currently stored.');
+            }
+        };
+    </script>
+    <h1>Mini Project 3: Calculator with Error Handling  </h1>
+    <div class="calculator">
+        <!-- Display for inputs and results -->
+        <input type="text" id="display" disabled placeholder="0">
+        
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="control">C</button>
+            <button onclick="appendToDisplay('/')">/</button>
+            <button onclick="appendToDisplay('*')">×</button>
+            <button onclick="deleteLast()" class="control">DEL</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button onclick="appendToDisplay('-')">-</button>
+            
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button onclick="appendToDisplay('+')">+</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button onclick="calculate()" class="equals">=</button>
+            
+            <button onclick="appendToDisplay('0')" class="zero">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById('display');
+
+function appendToDisplay(input) {
+    display.value += input;
+}
+
+function clearDisplay() {
+    display.value = "";
+}
+
+function deleteLast() {
+    display.value = display.value.slice(0, -1);
+}
+
+function calculate() {
+    try {
+        // Check for division by zero before evaluation
+        if (display.value.includes('/0')) {
+            throw new Error("Cannot divide by zero");
+        }
+
+        // eval() parses the string as a mathematical expression
+        const result = eval(display.value);
+        
+        if (isNaN(result) || !isFinite(result)) {
+            throw new Error("Invalid Result");
+        }
+
+        display.value = result;
+    } catch (error) {
+        // Displays the specific error to the user
+        display.value = "Error";
+        setTimeout(() => clearDisplay(), 1500); // Clear error after 1.5s
+    }
+}
+
+    </script>
+    <h1>Mini Project 4: Debugging Dashboard </h1>
+    <div class="dashboard-container">
+        <h1>Debugging Dashboard</h1>
+        <button onclick="generateError()">Generate Test Error</button>
+        <button onclick="clearLogs()">Clear Logs</button>
+        <div id="log-display"></div>
+    </div>
+    <script>
+        // Key for localStorage
+const LOG_KEY = 'debugErrorLogs';
+
+/**
+ * Overrides the default console.error to also log to localStorage.
+ */
+function overrideConsoleError() {
+    const originalConsoleError = console.error;
+
+    console.error = function(...args) {
+        // Call the original console.error function
+        originalConsoleError.apply(console, args);
+
+        // Format the log message
+        const logMessage = args.map(arg => {
+            if (typeof arg === 'object' && arg !== null) {
+                return JSON.stringify(arg);
+            }
+            return String(arg);
+        }).join(' ');
+        
+        // Store the log in localStorage
+        storeLog(logMessage);
+    };
+}
+
+/**
+ * Stores a log entry in localStorage.
+ * @param {string} message The error message.
+ */
+function storeLog(message) {
+    // Retrieve existing logs, or initialize an empty array
+    const logs = JSON.parse(localStorage.getItem(LOG_KEY)) || [];
+    
+    // Add new log entry with a timestamp
+    logs.push({
+        timestamp: new Date().toISOString(),
+        message: message
+    });
+
+    // Save the updated logs to localStorage (as a string)
+    // localStorage can only store strings
+    localStorage.setItem(LOG_KEY, JSON.stringify(logs));
+    displayLogs(); // Update the display immediately
+}
+
+/**
+ * Retrieves and displays logs from localStorage.
+ */
+function displayLogs() {
+    const logDisplay = document.getElementById('log-display');
+    logDisplay.innerHTML = ''; // Clear existing display
+    const logs = JSON.parse(localStorage.getItem(LOG_KEY)) || [];
+
+    if (logs.length === 0) {
+        logDisplay.innerHTML = '<p>No error logs found.</p>';
+        return;
+    }
+
+    // Display logs in reverse chronological order (newest first)
+    logs.reverse().forEach(log => {
+        const logEntry = document.createElement('div');
+        logEntry.classList.add('log-entry');
+        logEntry.innerHTML = `
+            <p class="timestamp">${new Date(log.timestamp).toLocaleString()}</p>
+            <p><strong>Error:</strong> ${log.message}</p>
+        `;
+        logDisplay.appendChild(logEntry);
+    });
+}
+
+/**
+ * Generates a test error for demonstration purposes.
+ */
+function generateError() {
+    try {
+        // Force an error
+        throw new Error("This is a test error generated by the user.");
+    } catch (e) {
+        console.error(e.message, e); // This will be captured by our override
+    }
+}
+
+/**
+ * Clears all logs from localStorage and updates the display.
+ */
+function clearLogs() {
+    localStorage.clear(); // Use the clear() method to empty storage
+    displayLogs();
+}
+
+// Initialize the override and display when the script loads
+overrideConsoleError();
+displayLogs();
+
+    </script>
+<h1>Mini Projects 5: Form Validator with Custom Errors </h1>
+<h2>Registration Form</h2>
+    <form id="registrationForm">
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="text" id="age" placeholder="Age (18-100)">
+        <input type="text" id="email" placeholder="Email Address">
+        <input type="password" id="password" placeholder="Password (min 6 chars)">
+        <button type="submit">Register</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        // Custom Error Classes
+class InvalidNameError extends Error { constructor(msg) { super(msg); this.name = "InvalidNameError"; } }
+class InvalidAgeError extends Error { constructor(msg) { super(msg); this.name = "InvalidAgeError"; } }
+class InvalidEmailError extends Error { constructor(msg) { super(msg); this.name = "InvalidEmailError"; } }
+class WeakPasswordError extends Error { constructor(msg) { super(msg); this.name = "WeakPasswordError"; } }
+
+document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value.trim();
+    const age = document.getElementById('age').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const messageBox = document.getElementById('message');
+
+    // Reset styles and messages
+    messageBox.className = '';
+    messageBox.textContent = '';
+
+    try {
+        // 1. Name Validation
+        if (!name) throw new InvalidNameError("Name cannot be empty.");
+
+        // 2. Age Validation
+        const ageNum = Number(age);
+        if (isNaN(ageNum) || ageNum < 18 || ageNum > 100) {
+            throw new InvalidAgeError("Age must be a number between 18 and 100.");
+        }
+
+        // 3. Email Validation (Regex)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            throw new InvalidEmailError("Please enter a valid email address.");
+        }
+
+        // 4. Password Validation
+        if (password.length < 6) {
+            throw new WeakPasswordError("Password must be at least 6 characters long.");
+        }
+
+        // Success State
+        messageBox.textContent = "Form submitted successfully!";
+        messageBox.className = "success";
+
+    } catch (error) {
+        // Display the specific custom error message
+        messageBox.textContent = `${error.name}: ${error.message}`;
+        messageBox.className = "error";
+    }
+});
+
+    </script>
+    <h1>Mini Projects 6: Error Logging System (Console Dashboard) </h1>
+    <h1>JavaScript Logger Dashboard</h1>
+
+    <div>
+        <input type="text" id="messageInput" placeholder="Enter message">
+        <select id="typeSelect">
+            <option value="info">Info</option>
+            <option value="warn">Warning</option>
+            <option value="error">Error</option>
+        </select>
+        <button onclick="addLog()">Log Message</button>
+    </div>
+
+    <h2>Log Console</h2>
+    <div id="log-container">
+        <!-- Logs will appear here -->
+    </div>
+
+    <script>
+        // --- Logger Class ---
+class Logger {
+    constructor() {
+        this.logs = []; // Array to store log objects
+    }
+
+    // General log method
+    log(message, type = 'info') {
+        const timestamp = new Date().toISOString();
+        const logEntry = { message, type, timestamp };
+        this.logs.push(logEntry); // Store in array
+
+        // Use native console methods for debugging
+        if (type === 'error') {
+            console.error(`[${type.toUpperCase()}] ${timestamp} - ${message}`);
+        } else if (type === 'warn') {
+            console.warn(`[${type.toUpperCase()}] ${timestamp} - ${message}`);
+        } else {
+            console.log(`[${type.toUpperCase()}] ${timestamp} - ${message}`);
+        }
+
+        // Update the HTML Dashboard
+        this.updateDashboard(logEntry);
+    }
+
+    // Helper methods for specific types
+    info(message) { this.log(message, 'info'); }
+    warn(message) { this.log(message, 'warn'); }
+    error(message) { this.log(message, 'error'); }
+
+    // Method to render logs in the HTML dashboard
+    updateDashboard(entry) {
+        const container = document.getElementById('log-container');
+        const div = document.createElement('div');
+        div.className = `log-entry log-${entry.type}`; // Add class for styling
+        div.innerHTML = `
+            <span class="timestamp">${entry.timestamp}</span>
+            <strong>[${entry.type.toUpperCase()}]</strong>: ${entry.message}
+        `;
+        container.appendChild(div);
+        // Scroll to bottom to show latest log
+        container.scrollTop = container.scrollHeight;
+    }}
+
+    // Method to display all stored logs (optional)
+
+    </script>
+    <h1>______________________________________Completed______________________________________________</h1>
+    
+</body>
+</html>
